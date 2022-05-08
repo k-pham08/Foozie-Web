@@ -128,11 +128,15 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AuthenticationController.cs" />
     <Compile Include="Controllers\FOODsController.cs" />
     <Compile Include="Controllers\FOOD_TYPEController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ADDRESS.cs">
+      <DependentUpon>FoodDAL.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\FOOD.cs">
       <DependentUpon>FoodDAL.tt</DependentUpon>
@@ -153,6 +157,9 @@
       <DependentUpon>FoodDAL.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\FOOD_TYPE.cs">
+      <DependentUpon>FoodDAL.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\USER.cs">
       <DependentUpon>FoodDAL.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -250,6 +257,7 @@
     <Content Include="Images\food_type\SNACK.jpeg" />
     <Content Include="Images\food_type\VEGETARIAN_FOOD.jpg" />
     <Content Include="Images\logo.ico" />
+    <Content Include="Images\logo.png" />
     <Content Include="lib\bootstrap-icons\bootstrap-icons.svg" />
     <Content Include="lib\bootstrap-icons\font\bootstrap-icons.css" />
     <Content Include="lib\bootstrap-icons\font\bootstrap-icons.min.css" />
@@ -2005,6 +2013,12 @@
     <Content Include="Views\FOOD_TYPE\Details.cshtml" />
     <Content Include="Views\FOOD_TYPE\Edit.cshtml" />
     <Content Include="Views\FOOD_TYPE\Index.cshtml" />
+    <Content Include="Views\Authentication\Create.cshtml" />
+    <Content Include="Views\Authentication\Delete.cshtml" />
+    <Content Include="Views\Authentication\Details.cshtml" />
+    <Content Include="Views\Authentication\Edit.cshtml" />
+    <Content Include="Views\Authentication\Index.cshtml" />
+    <Content Include="Views\Authentication\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

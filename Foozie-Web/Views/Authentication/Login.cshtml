@@ -1,0 +1,54 @@
+﻿@model Foozie_Web.Models.USER
+
+@{
+    ViewBag.Title = "Login";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/x-icon" href="~/Images/logo.ico" />
+    <title>Foozie - Đặt đồ ăn trực tuyến</title>
+
+    @Styles.Render("~/Content/css")
+</head>
+
+
+
+
+<body class="bg-dark bg-opacity-75">
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+    <div class="container-fluid card text-white bg-dark w-25 m-auto mt-5 p-5">
+        <img src="~/Images/logo.png" />
+        <div class="form-group">
+            @Html.LabelFor(m => m.username, "Tên đăng nhập")
+            @Html.TextBoxFor(m => m.username, "", new { @class = "form-control" })
+
+        </div>
+        <div class="form-group mt-3">
+            @Html.LabelFor(m => m.password, "Mật khẩu")
+            @Html.PasswordFor(m => m.password, new { @class = "form-control" })
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10 mt-3">
+                <input type="submit" value="Đăng nhập" class="btn btn-primary" />
+            </div>
+        </div>
+        <a href="./Create" class="text-decoration-none mt-3">Đăng ký tài khoản</a>
+        @if (ViewBag.error != null)
+        {
+            <span class="badge bg-danger mt-3">@ViewBag.error</span>
+        }
+    </div>
+    }
+</body>
+</html>
+

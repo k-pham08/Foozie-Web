@@ -5,6 +5,15 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="FoozieModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ADDRESS">
+          <Key>
+            <PropertyRef Name="address_id" />
+          </Key>
+          <Property Name="address_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="255" />
+          <Property Name="location" Type="nvarchar" MaxLength="10" />
+          <Property Name="user_id" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
         <EntityType Name="FOOD">
           <Key>
             <PropertyRef Name="food_id" />
@@ -28,6 +37,31 @@
           <Property Name="is_delete" Type="bit" />
           <Property Name="thumbnail" Type="nvarchar" MaxLength="255" />
         </EntityType>
+        <EntityType Name="USER">
+          <Key>
+            <PropertyRef Name="user_id" />
+          </Key>
+          <Property Name="user_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="type" Type="nvarchar" MaxLength="10" />
+          <Property Name="first_name" Type="nvarchar" MaxLength="255" />
+          <Property Name="last_name" Type="nvarchar" MaxLength="255" />
+          <Property Name="email" Type="nvarchar" MaxLength="255" />
+          <Property Name="phone" Type="numeric" Precision="11" Scale="0" />
+          <Property Name="username" Type="varchar" MaxLength="255" />
+          <Property Name="password" Type="varchar" MaxLength="255" />
+        </EntityType>
+        <Association Name="FK__ADDRESS__user_id__5EBF139D">
+          <End Role="USER" Type="Self.USER" Multiplicity="1" />
+          <End Role="ADDRESS" Type="Self.ADDRESS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="ADDRESS">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__FOOD__type_id__49C3F6B7">
           <End Role="FOOD_TYPE" Type="Self.FOOD_TYPE" Multiplicity="1" />
           <End Role="FOOD" Type="Self.FOOD" Multiplicity="*" />
@@ -41,8 +75,14 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="FoozieModelStoreContainer">
+          <EntitySet Name="ADDRESS" EntityType="Self.ADDRESS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FOOD" EntityType="Self.FOOD" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FOOD_TYPE" EntityType="Self.FOOD_TYPE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="USER" EntityType="Self.USER" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__ADDRESS__user_id__5EBF139D" Association="Self.FK__ADDRESS__user_id__5EBF139D">
+            <End Role="USER" EntitySet="USER" />
+            <End Role="ADDRESS" EntitySet="ADDRESS" />
+          </AssociationSet>
           <AssociationSet Name="FK__FOOD__type_id__49C3F6B7" Association="Self.FK__FOOD__type_id__49C3F6B7">
             <End Role="FOOD_TYPE" EntitySet="FOOD_TYPE" />
             <End Role="FOOD" EntitySet="FOOD" />
@@ -96,7 +136,49 @@
             <End Role="FOOD_TYPE" EntitySet="FOOD_TYPE" />
             <End Role="FOOD" EntitySet="FOODs" />
           </AssociationSet>
+          <EntitySet Name="ADDRESSes" EntityType="FoozieModel.ADDRESS" />
+          <EntitySet Name="USERs" EntityType="FoozieModel.USER" />
+          <AssociationSet Name="FK__ADDRESS__user_id__5EBF139D" Association="FoozieModel.FK__ADDRESS__user_id__5EBF139D">
+            <End Role="USER" EntitySet="USERs" />
+            <End Role="ADDRESS" EntitySet="ADDRESSes" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="ADDRESS">
+          <Key>
+            <PropertyRef Name="address_id" />
+          </Key>
+          <Property Name="address_id" Type="Guid" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="location" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="user_id" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="USER" Relationship="FoozieModel.FK__ADDRESS__user_id__5EBF139D" FromRole="ADDRESS" ToRole="USER" />
+        </EntityType>
+        <EntityType Name="USER">
+          <Key>
+            <PropertyRef Name="user_id" />
+          </Key>
+          <Property Name="user_id" Type="Guid" Nullable="false" />
+          <Property Name="type" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="first_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="last_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="email" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="phone" Type="Decimal" Precision="11" Scale="0" />
+          <Property Name="username" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="password" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ADDRESSes" Relationship="FoozieModel.FK__ADDRESS__user_id__5EBF139D" FromRole="USER" ToRole="ADDRESS" />
+        </EntityType>
+        <Association Name="FK__ADDRESS__user_id__5EBF139D">
+          <End Type="FoozieModel.USER" Role="USER" Multiplicity="1" />
+          <End Type="FoozieModel.ADDRESS" Role="ADDRESS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="ADDRESS">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -125,6 +207,30 @@
                 <ScalarProperty Name="code" ColumnName="code" />
                 <ScalarProperty Name="description" ColumnName="description" />
                 <ScalarProperty Name="is_delete" ColumnName="is_delete" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ADDRESSes">
+            <EntityTypeMapping TypeName="FoozieModel.ADDRESS">
+              <MappingFragment StoreEntitySet="ADDRESS">
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="location" ColumnName="location" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="address_id" ColumnName="address_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="USERs">
+            <EntityTypeMapping TypeName="FoozieModel.USER">
+              <MappingFragment StoreEntitySet="USER">
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="last_name" ColumnName="last_name" />
+                <ScalarProperty Name="first_name" ColumnName="first_name" />
+                <ScalarProperty Name="type" ColumnName="type" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
