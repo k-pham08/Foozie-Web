@@ -1,0 +1,43 @@
+﻿
+@model IEnumerable<Foozie_Web.Models.FOOD>
+
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container container-fluid mt-3">
+    <form class="d-flex">
+        <input class="form-control me-2 bg-secondary bg-opacity-25" type="search" placeholder="Tìm kiếm..." aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">
+            <img src="~/lib/bootstrap-icons/icons/search.svg"/>
+        </button>
+    </form>
+    <hr />
+</div>
+
+
+
+<div class="align-items-center container d-flex flex-wrap">
+    @foreach(var item in Model)
+    {
+    <a class="card col-3 p-3 m-3 text-decoration-none" style="width: 18rem;" href="../../FOODs/Details/@item.food_id">
+        <img src="~/Images/foods/@item.FOOD_TYPE.code/@item.thumbnail" class="card-img-top" style="height: 10rem">
+        <div class="card-body">
+            <h5 class="card-title text-black">
+                @Html.DisplayFor(modelItem => item.name)
+            </h5>
+            <p class="text-black">
+                @Html.DisplayFor(modelItem => item.FOOD_TYPE.name)
+            </p>
+            <p class="text-black">
+                @Html.DisplayFor(modelItem => item.price)
+            </p>
+            <p class="btn btn-outline-success">Đặt ngay</p>
+        </div>
+        
+    </a>
+    }
+</div>
+
