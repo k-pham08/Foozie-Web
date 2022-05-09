@@ -8,9 +8,12 @@
         <EntityTypeShape EntityType="FoozieModel.FOOD" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
         <EntityTypeShape EntityType="FoozieModel.FOOD_TYPE" Width="1.5" PointX="0.75" PointY="1.125" IsExpanded="true" />
         <AssociationConnector Association="FoozieModel.FK__FOOD__type_id__49C3F6B7" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="FoozieModel.ADDRESS" Width="1.5" PointX="3.25" PointY="5.25" />
         <EntityTypeShape EntityType="FoozieModel.USER" Width="1.5" PointX="1" PointY="4.875" />
-        <AssociationConnector Association="FoozieModel.FK__ADDRESS__user_id__5EBF139D" />
+        <EntityTypeShape EntityType="FoozieModel.ORDER" Width="1.5" PointX="3" PointY="9.25" />
+        <EntityTypeShape EntityType="FoozieModel.ORDER_DETAIL" Width="1.5" PointX="5.25" PointY="1.375" />
+        <AssociationConnector Association="FoozieModel.FK__ORDER_DET__food___71D1E811" />
+        <AssociationConnector Association="FoozieModel.FK__ORDER__user_id__72C60C4A" />
+        <AssociationConnector Association="FoozieModel.FK__ORDER_DET__order__73BA3083" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

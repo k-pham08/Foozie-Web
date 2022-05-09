@@ -17,7 +17,7 @@ namespace Foozie_Web.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public USER()
         {
-            this.ADDRESSes = new HashSet<ADDRESS>();
+            this.ORDERs = new HashSet<ORDER>();
         }
     
         public System.Guid user_id { get; set; }
@@ -30,6 +30,6 @@ namespace Foozie_Web.Models
         public string password { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ADDRESS> ADDRESSes { get; set; }
+        public virtual ICollection<ORDER> ORDERs { get; set; }
     }
 }

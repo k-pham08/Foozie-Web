@@ -1,0 +1,51 @@
+﻿@model Foozie_Web.Models.ORDER_DETAIL
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ORDER_DETAIL</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.quantity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.quantity)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.note)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.note)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FOOD.name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FOOD.name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ORDER.status)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ORDER.status)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

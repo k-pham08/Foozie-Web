@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Foozie_Web.Models.ORDER>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card m-5 p-3 row shadow-lg rounded">
+    <div class="row align-items-start">
+        <h2 class="col">
+            Giỏ hàng
+        </h2>
+        <div class="col text-end">
+            One of three columns
+        </div>
+    </div>
+    <ul class="list-group mt-3">
+        @foreach (var item in Model)
+        {
+            foreach (var detail in item.ORDER_DETAIL)
+            {
+                <li class="list-group-item d-flex">
+                    <img src="~/Images/foods/@detail.FOOD.FOOD_TYPE.code/@detail.FOOD.thumbnail" class="rounded me-3" style="width: 10%"/>
+                    <div class="w-100">
+                        <h5>@detail.FOOD.name</h5>
+                        <p class="">@detail.FOOD.FOOD_TYPE.name</p>
+                        <p>Số lượng: <span>@detail.quantity</span></p>
+                    </div>
+                    <div class="flex-shrink-1 m-auto" style="color: red"><span>@detail.FOOD.price</span>đ</div>
+                </li>
+            }
+            <div class="total"></div>
+        }
+    </ul>
+</div>
+

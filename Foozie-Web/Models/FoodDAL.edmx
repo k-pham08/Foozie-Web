@@ -5,15 +5,6 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="FoozieModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="ADDRESS">
-          <Key>
-            <PropertyRef Name="address_id" />
-          </Key>
-          <Property Name="address_id" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="name" Type="nvarchar" MaxLength="255" />
-          <Property Name="location" Type="nvarchar" MaxLength="10" />
-          <Property Name="user_id" Type="uniqueidentifier" Nullable="false" />
-        </EntityType>
         <EntityType Name="FOOD">
           <Key>
             <PropertyRef Name="food_id" />
@@ -37,6 +28,27 @@
           <Property Name="is_delete" Type="bit" />
           <Property Name="thumbnail" Type="nvarchar" MaxLength="255" />
         </EntityType>
+        <EntityType Name="ORDER">
+          <Key>
+            <PropertyRef Name="order_id" />
+          </Key>
+          <Property Name="order_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="date" Type="datetime" />
+          <Property Name="status" Type="nvarchar" MaxLength="255" />
+          <Property Name="address" Type="nvarchar" MaxLength="255" />
+          <Property Name="user_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="total" Type="numeric" Precision="20" Scale="0" />
+        </EntityType>
+        <EntityType Name="ORDER_DETAIL">
+          <Key>
+            <PropertyRef Name="order_id" />
+            <PropertyRef Name="food_id" />
+          </Key>
+          <Property Name="order_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="food_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="quantity" Type="numeric" Precision="5" Scale="0" />
+          <Property Name="note" Type="nvarchar" MaxLength="255" />
+        </EntityType>
         <EntityType Name="USER">
           <Key>
             <PropertyRef Name="user_id" />
@@ -50,18 +62,6 @@
           <Property Name="username" Type="varchar" MaxLength="255" />
           <Property Name="password" Type="varchar" MaxLength="255" />
         </EntityType>
-        <Association Name="FK__ADDRESS__user_id__5EBF139D">
-          <End Role="USER" Type="Self.USER" Multiplicity="1" />
-          <End Role="ADDRESS" Type="Self.ADDRESS" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="USER">
-              <PropertyRef Name="user_id" />
-            </Principal>
-            <Dependent Role="ADDRESS">
-              <PropertyRef Name="user_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK__FOOD__type_id__49C3F6B7">
           <End Role="FOOD_TYPE" Type="Self.FOOD_TYPE" Multiplicity="1" />
           <End Role="FOOD" Type="Self.FOOD" Multiplicity="*" />
@@ -74,18 +74,63 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__ORDER__user_id__72C60C4A">
+          <End Role="USER" Type="Self.USER" Multiplicity="1" />
+          <End Role="ORDER" Type="Self.ORDER" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USER">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="ORDER">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ORDER_DET__food___71D1E811">
+          <End Role="FOOD" Type="Self.FOOD" Multiplicity="1" />
+          <End Role="ORDER_DETAIL" Type="Self.ORDER_DETAIL" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FOOD">
+              <PropertyRef Name="food_id" />
+            </Principal>
+            <Dependent Role="ORDER_DETAIL">
+              <PropertyRef Name="food_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ORDER_DET__order__73BA3083">
+          <End Role="ORDER" Type="Self.ORDER" Multiplicity="1" />
+          <End Role="ORDER_DETAIL" Type="Self.ORDER_DETAIL" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ORDER">
+              <PropertyRef Name="order_id" />
+            </Principal>
+            <Dependent Role="ORDER_DETAIL">
+              <PropertyRef Name="order_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="FoozieModelStoreContainer">
-          <EntitySet Name="ADDRESS" EntityType="Self.ADDRESS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FOOD" EntityType="Self.FOOD" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="FOOD_TYPE" EntityType="Self.FOOD_TYPE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ORDER" EntityType="Self.ORDER" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ORDER_DETAIL" EntityType="Self.ORDER_DETAIL" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="USER" EntityType="Self.USER" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__ADDRESS__user_id__5EBF139D" Association="Self.FK__ADDRESS__user_id__5EBF139D">
-            <End Role="USER" EntitySet="USER" />
-            <End Role="ADDRESS" EntitySet="ADDRESS" />
-          </AssociationSet>
           <AssociationSet Name="FK__FOOD__type_id__49C3F6B7" Association="Self.FK__FOOD__type_id__49C3F6B7">
             <End Role="FOOD_TYPE" EntitySet="FOOD_TYPE" />
             <End Role="FOOD" EntitySet="FOOD" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ORDER__user_id__72C60C4A" Association="Self.FK__ORDER__user_id__72C60C4A">
+            <End Role="USER" EntitySet="USER" />
+            <End Role="ORDER" EntitySet="ORDER" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ORDER_DET__food___71D1E811" Association="Self.FK__ORDER_DET__food___71D1E811">
+            <End Role="FOOD" EntitySet="FOOD" />
+            <End Role="ORDER_DETAIL" EntitySet="ORDER_DETAIL" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ORDER_DET__order__73BA3083" Association="Self.FK__ORDER_DET__order__73BA3083">
+            <End Role="ORDER" EntitySet="ORDER" />
+            <End Role="ORDER_DETAIL" EntitySet="ORDER_DETAIL" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -104,6 +149,7 @@
           <Property Name="is_delete" Type="Boolean" />
           <Property Name="type_id" Type="Guid" Nullable="false" />
           <NavigationProperty Name="FOOD_TYPE" Relationship="Self.FK__FOOD__type_id__49C3F6B7" FromRole="FOOD" ToRole="FOOD_TYPE" />
+          <NavigationProperty Name="ORDER_DETAIL" Relationship="FoozieModel.FK__ORDER_DET__food___71D1E811" FromRole="FOOD" ToRole="ORDER_DETAIL" />
         </EntityType>
         <EntityType Name="FOOD_TYPE">
           <Key>
@@ -136,23 +182,22 @@
             <End Role="FOOD_TYPE" EntitySet="FOOD_TYPE" />
             <End Role="FOOD" EntitySet="FOODs" />
           </AssociationSet>
-          <EntitySet Name="ADDRESSes" EntityType="FoozieModel.ADDRESS" />
           <EntitySet Name="USERs" EntityType="FoozieModel.USER" />
-          <AssociationSet Name="FK__ADDRESS__user_id__5EBF139D" Association="FoozieModel.FK__ADDRESS__user_id__5EBF139D">
+          <EntitySet Name="ORDERs" EntityType="FoozieModel.ORDER" />
+          <EntitySet Name="ORDER_DETAIL" EntityType="FoozieModel.ORDER_DETAIL" />
+          <AssociationSet Name="FK__ORDER_DET__food___71D1E811" Association="FoozieModel.FK__ORDER_DET__food___71D1E811">
+            <End Role="FOOD" EntitySet="FOODs" />
+            <End Role="ORDER_DETAIL" EntitySet="ORDER_DETAIL" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ORDER__user_id__72C60C4A" Association="FoozieModel.FK__ORDER__user_id__72C60C4A">
             <End Role="USER" EntitySet="USERs" />
-            <End Role="ADDRESS" EntitySet="ADDRESSes" />
+            <End Role="ORDER" EntitySet="ORDERs" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ORDER_DET__order__73BA3083" Association="FoozieModel.FK__ORDER_DET__order__73BA3083">
+            <End Role="ORDER" EntitySet="ORDERs" />
+            <End Role="ORDER_DETAIL" EntitySet="ORDER_DETAIL" />
           </AssociationSet>
         </EntityContainer>
-        <EntityType Name="ADDRESS">
-          <Key>
-            <PropertyRef Name="address_id" />
-          </Key>
-          <Property Name="address_id" Type="Guid" Nullable="false" />
-          <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="location" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="user_id" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="USER" Relationship="FoozieModel.FK__ADDRESS__user_id__5EBF139D" FromRole="ADDRESS" ToRole="USER" />
-        </EntityType>
         <EntityType Name="USER">
           <Key>
             <PropertyRef Name="user_id" />
@@ -165,17 +210,66 @@
           <Property Name="phone" Type="Decimal" Precision="11" Scale="0" />
           <Property Name="username" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="password" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="ADDRESSes" Relationship="FoozieModel.FK__ADDRESS__user_id__5EBF139D" FromRole="USER" ToRole="ADDRESS" />
+          <NavigationProperty Name="ORDERs" Relationship="FoozieModel.FK__ORDER__user_id__72C60C4A" FromRole="USER" ToRole="ORDER" />
         </EntityType>
-        <Association Name="FK__ADDRESS__user_id__5EBF139D">
+        <EntityType Name="ORDER">
+          <Key>
+            <PropertyRef Name="order_id" />
+          </Key>
+          <Property Name="order_id" Type="Guid" Nullable="false" />
+          <Property Name="date" Type="DateTime" Precision="3" />
+          <Property Name="status" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="address" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="user_id" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="USER" Relationship="FoozieModel.FK__ORDER__user_id__72C60C4A" FromRole="ORDER" ToRole="USER" />
+          <NavigationProperty Name="ORDER_DETAIL" Relationship="FoozieModel.FK__ORDER_DET__order__73BA3083" FromRole="ORDER" ToRole="ORDER_DETAIL" />
+          <Property Name="total" Type="Decimal" Precision="20" Scale="0" />
+        </EntityType>
+        <EntityType Name="ORDER_DETAIL">
+          <Key>
+            <PropertyRef Name="order_id" />
+            <PropertyRef Name="food_id" />
+          </Key>
+          <Property Name="order_id" Type="Guid" Nullable="false" />
+          <Property Name="food_id" Type="Guid" Nullable="false" />
+          <Property Name="quantity" Type="Decimal" Precision="5" Scale="0" />
+          <NavigationProperty Name="FOOD" Relationship="FoozieModel.FK__ORDER_DET__food___71D1E811" FromRole="ORDER_DETAIL" ToRole="FOOD" />
+          <NavigationProperty Name="ORDER" Relationship="FoozieModel.FK__ORDER_DET__order__73BA3083" FromRole="ORDER_DETAIL" ToRole="ORDER" />
+          <Property Name="note" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK__ORDER_DET__food___71D1E811">
+          <End Type="FoozieModel.FOOD" Role="FOOD" Multiplicity="1" />
+          <End Type="FoozieModel.ORDER_DETAIL" Role="ORDER_DETAIL" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FOOD">
+              <PropertyRef Name="food_id" />
+            </Principal>
+            <Dependent Role="ORDER_DETAIL">
+              <PropertyRef Name="food_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ORDER__user_id__72C60C4A">
           <End Type="FoozieModel.USER" Role="USER" Multiplicity="1" />
-          <End Type="FoozieModel.ADDRESS" Role="ADDRESS" Multiplicity="*" />
+          <End Type="FoozieModel.ORDER" Role="ORDER" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="USER">
               <PropertyRef Name="user_id" />
             </Principal>
-            <Dependent Role="ADDRESS">
+            <Dependent Role="ORDER">
               <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ORDER_DET__order__73BA3083">
+          <End Type="FoozieModel.ORDER" Role="ORDER" Multiplicity="1" />
+          <End Type="FoozieModel.ORDER_DETAIL" Role="ORDER_DETAIL" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ORDER">
+              <PropertyRef Name="order_id" />
+            </Principal>
+            <Dependent Role="ORDER_DETAIL">
+              <PropertyRef Name="order_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -210,16 +304,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ADDRESSes">
-            <EntityTypeMapping TypeName="FoozieModel.ADDRESS">
-              <MappingFragment StoreEntitySet="ADDRESS">
-                <ScalarProperty Name="user_id" ColumnName="user_id" />
-                <ScalarProperty Name="location" ColumnName="location" />
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="address_id" ColumnName="address_id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="USERs">
             <EntityTypeMapping TypeName="FoozieModel.USER">
               <MappingFragment StoreEntitySet="USER">
@@ -231,6 +315,28 @@
                 <ScalarProperty Name="first_name" ColumnName="first_name" />
                 <ScalarProperty Name="type" ColumnName="type" />
                 <ScalarProperty Name="user_id" ColumnName="user_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ORDERs">
+            <EntityTypeMapping TypeName="FoozieModel.ORDER">
+              <MappingFragment StoreEntitySet="ORDER">
+                <ScalarProperty Name="total" ColumnName="total" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="address" ColumnName="address" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="order_id" ColumnName="order_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ORDER_DETAIL">
+            <EntityTypeMapping TypeName="FoozieModel.ORDER_DETAIL">
+              <MappingFragment StoreEntitySet="ORDER_DETAIL">
+                <ScalarProperty Name="note" ColumnName="note" />
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
+                <ScalarProperty Name="food_id" ColumnName="food_id" />
+                <ScalarProperty Name="order_id" ColumnName="order_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

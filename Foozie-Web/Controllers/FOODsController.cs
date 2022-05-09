@@ -14,6 +14,8 @@ namespace Foozie_Web.Controllers
     {
         private FoozieEntity db = new FoozieEntity();
 
+        
+
         // GET: FOODs
         public ActionResult Index()
         {
@@ -34,6 +36,29 @@ namespace Foozie_Web.Controllers
                 return HttpNotFound();
             }
             return View(fOOD);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Details(Guid id, [Bind(Include = "order_id,food_id,quantity,note")] ORDER_DETAIL oRDER_DETAIL)
+        {
+            if (ModelState.IsValid)
+            {
+                Guid cur_user = new Guid(Session["idUser"].ToString());
+                var data = db.ORDERs.Where(o => o.user_id.Equals(cur_user));
+                oRDER_DETAIL.order_id = data.FirstOrDefault().order_id;
+                oRDER_DETAIL.food_id = id;
+                oRDER_DETAIL.quantity = 1;
+                oRDER_DETAIL.note = "";
+                db.ORDER_DETAIL.Add(oRDER_DETAIL);
+                db.SaveChanges();
+                ViewBag.success = "Thêm thành công";
+                return RedirectToAction("Index", "Home");
+            }
+
+            ViewBag.food_id = new SelectList(db.FOODs, "food_id", "name", oRDER_DETAIL.food_id);
+            ViewBag.order_id = new SelectList(db.ORDERs, "order_id", "status", oRDER_DETAIL.order_id);
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: FOODs/Create

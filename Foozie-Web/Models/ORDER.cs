@@ -12,23 +12,22 @@ namespace Foozie_Web.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class FOOD
+    public partial class ORDER
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public FOOD()
+        public ORDER()
         {
             this.ORDER_DETAIL = new HashSet<ORDER_DETAIL>();
         }
     
-        public System.Guid food_id { get; set; }
-        public string name { get; set; }
-        public string description { get; set; }
-        public string thumbnail { get; set; }
-        public Nullable<decimal> price { get; set; }
-        public Nullable<bool> is_delete { get; set; }
-        public System.Guid type_id { get; set; }
+        public System.Guid order_id { get; set; }
+        public Nullable<System.DateTime> date { get; set; }
+        public string status { get; set; }
+        public string address { get; set; }
+        public System.Guid user_id { get; set; }
+        public Nullable<decimal> total { get; set; }
     
-        public virtual FOOD_TYPE FOOD_TYPE { get; set; }
+        public virtual USER USER { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ORDER_DETAIL> ORDER_DETAIL { get; set; }
     }

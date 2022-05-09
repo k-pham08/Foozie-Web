@@ -80,15 +80,23 @@ namespace Foozie_Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(string username, string password)
+        public ActionResult Login(string username, string password, [Bind(Include = "order_id,date,status,address,user_id")] ORDER oRDER)
         {
             if (ModelState.IsValid)
             {
+                
                 string f_password = GetMD5(password);
                 var data = db.USERs.Where(s => s.username.Equals(username) && s.password.Equals(f_password)).ToList();
                 if(data.Count() > 0)
                 {
                     Session["idUser"] = data.FirstOrDefault().user_id;
+                    oRDER.order_id = Guid.NewGuid();
+                    oRDER.user_id = new Guid(Session["idUser"].ToString());
+                    oRDER.date = DateTime.Now;
+                    oRDER.status = "Waiting";
+                    oRDER.total = 0;
+                    db.ORDERs.Add(oRDER);
+                    db.SaveChanges();
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -96,6 +104,8 @@ namespace Foozie_Web.Controllers
                     ViewBag.error = "Sai tên đăng nhập hoặc mật khẩu";
                     return View();
                 }
+
+                
             }
             return RedirectToAction("Login");
         }

@@ -12,13 +12,14 @@ namespace Foozie_Web.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class ADDRESS
+    public partial class ORDER_DETAIL
     {
-        public System.Guid address_id { get; set; }
-        public string name { get; set; }
-        public string location { get; set; }
-        public System.Guid user_id { get; set; }
+        public System.Guid order_id { get; set; }
+        public System.Guid food_id { get; set; }
+        public Nullable<decimal> quantity { get; set; }
+        public string note { get; set; }
     
-        public virtual USER USER { get; set; }
+        public virtual FOOD FOOD { get; set; }
+        public virtual ORDER ORDER { get; set; }
     }
 }
