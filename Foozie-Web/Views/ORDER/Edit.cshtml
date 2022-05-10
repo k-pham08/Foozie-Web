@@ -7,58 +7,76 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Edit</h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     
-    <div class="form-horizontal">
-        <h4>ORDER</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.order_id)
+<div class="form-horizontal card m-5 p-3 row shadow-lg rounded">
+    <h4>ORDER</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.order_id)
+    @Html.HiddenFor(model => model.user_id)
+    @Html.HiddenFor(model => model.status)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.date, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.date, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.date, "", new { @class = "text-danger" })
-            </div>
-        </div>
+    <ul class="list-group mt-3">
+        @foreach (var item in Model.ORDER_DETAIL)
+        {
+            <li class="list-group-item d-flex">
+                <img src="~/Images/foods/@item.FOOD.FOOD_TYPE.code/@item.FOOD.thumbnail" class="rounded me-3" style="width: 10%" />
+                <div class="w-100">
+                    <h5>@item.FOOD.name</h5>
+                    <p class="">@item.FOOD.FOOD_TYPE.name</p>
+                    <p>Số lượng: <span class="quantity">@item.quantity</span></p>
+                </div>
+                <div class="flex-shrink-1 m-auto" style="color: red"><span class="price">@item.FOOD.price</span>đ</div>
+            </li>
+        }
+    </ul>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.status, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.status, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.status, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.address, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.address, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.address, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.user_id, "user_id", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("user_id", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.user_id, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
+    <div class="form-group mt-3">
+        @Html.LabelFor(model => model.date,"Ngày đặt", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="">
+            @Html.EditorFor(model => model.date, new { htmlAttributes = new { @class = "form-control", @readonly="readonly"} })
+            @Html.ValidationMessageFor(model => model.date, "", new { @class = "text-danger" })
         </div>
     </div>
+
+    <div class="form-group mt-3">
+        @Html.LabelFor(model => model.address,"Địa chỉ", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="">
+            @Html.EditorFor(model => model.address, new { htmlAttributes = new { @class = "form-control"} })
+            @Html.ValidationMessageFor(model => model.address, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group mt-3">
+        @Html.LabelFor(model => model.total, "Tổng tiền", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="">
+            @Html.EditorFor(model => model.total, new { htmlAttributes = new { @class = "form-control total", @readonly = "readonly" } }    )
+            @Html.ValidationMessageFor(model => model.total, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Xác nhận" class="btn btn-success mt-3" />
+        </div>
+    </div>
+</div>
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
+
+<script>
+    var total = 0;
+    var price = document.querySelectorAll(".price")
+    var quantity = document.querySelectorAll(".quantity")
+
+    for (let i = 0; i < price.length; i++) {
+        total += parseInt(price[i].textContent) * parseInt(quantity[i].textContent);
+    }
+
+    document.querySelector(".total").value = total
+
+</script>

@@ -10,7 +10,7 @@
         <h2 class="col">
             Giỏ hàng
         </h2>
-        <div class="address-show col"></div>
+        @*<div class="address-show col"></div>
         <div class="col text-end add-address">
             <button class="btn btn-outline-success" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop">Thêm địa chỉ</button>
 
@@ -24,9 +24,9 @@
                 </div>
                 <button class="btn btn-primary ms-3 me-3 confirm" onclick="onAddress()">Xác nhận</button>
             </div>
-        </div>
+        </div>*@
     </div>
-    <ul class="list-group mt-3">
+    <ul class="list-group mt-3  ">
         @foreach (var item in Model)
         {
             <li class="list-group-item d-flex">
@@ -44,7 +44,7 @@
         <div class="me-3">Tổng số tiền:</div>
         <h5 class="total" style="color:red"></h5>
         <span style="color:red">đ</span>
-        <button class="btn btn-success ms-auto">Thanh toán</button>
+        @Html.ActionLink("Thanh toán", "Edit", "ORDER", new { Model.FirstOrDefault().ORDER.order_id }, new { @class= "btn btn-success ms-auto" })
     </div>
 </div>
 

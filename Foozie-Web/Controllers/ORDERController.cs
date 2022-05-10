@@ -64,13 +64,13 @@ namespace Foozie_Web.Controllers
         }
 
         // GET: ORDER/Edit/5
-        public ActionResult Edit(Guid? id)
+        public ActionResult Edit(Guid? order_id)
         {
-            if (id == null)
+            if (order_id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ORDER oRDER = db.ORDERs.Find(id);
+            ORDER oRDER = db.ORDERs.Find(order_id);
             if (oRDER == null)
             {
                 return HttpNotFound();
@@ -84,13 +84,14 @@ namespace Foozie_Web.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "order_id,date,status,address,user_id")] ORDER oRDER)
+        public ActionResult Edit([Bind(Include = "order_id,date,status,address,total,user_id")] ORDER oRDER)
         {
             if (ModelState.IsValid)
-            {
+            {      
                 db.Entry(oRDER).State = EntityState.Modified;
+                oRDER.status = "Payment";
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
             ViewBag.user_id = new SelectList(db.USERs, "user_id", "type", oRDER.user_id);
             return View(oRDER);

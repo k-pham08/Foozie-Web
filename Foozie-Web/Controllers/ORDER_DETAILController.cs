@@ -22,6 +22,7 @@ namespace Foozie_Web.Controllers
         }
 
         // GET: ORDER_DETAIL/Details/5
+        //[HttpGet(Route"Details/{id}")]
         public ActionResult Details(Guid? id)
         {
             if (id == null)
