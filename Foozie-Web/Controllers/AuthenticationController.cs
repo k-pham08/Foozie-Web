@@ -80,7 +80,7 @@ namespace Foozie_Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(string username, string password, [Bind(Include = "order_id,date,status,address,user_id")] ORDER oRDER)
+        public ActionResult Login(string username, string password)
         {
             if (ModelState.IsValid)
             {
@@ -90,13 +90,6 @@ namespace Foozie_Web.Controllers
                 if(data.Count() > 0)
                 {
                     Session["idUser"] = data.FirstOrDefault().user_id;
-                    oRDER.order_id = Guid.NewGuid();
-                    oRDER.user_id = new Guid(Session["idUser"].ToString());
-                    oRDER.date = DateTime.Now;
-                    oRDER.status = "Waiting";
-                    oRDER.total = 0;
-                    db.ORDERs.Add(oRDER);
-                    db.SaveChanges();
                     return RedirectToAction("Index", "Home");
                 }
                 else

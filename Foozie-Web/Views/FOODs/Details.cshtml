@@ -21,9 +21,9 @@
             {
                 @Html.AntiForgeryToken()
                 <div class="d-flex">
-                    <img class="minus" src="~/lib/bootstrap-icons/icons/dash-circle.svg" style="width: 2rem; cursor: pointer" onclick="onMinus()" />
-                    <h3 class="quantity ms-3 me-3">1</h3>
-                    <img class="plus" src="~/lib/bootstrap-icons/icons/plus-circle.svg" style="width: 2rem; cursor: pointer" onclick="onPlus()" />
+                    <img class="minus" src="~/lib/bootstrap-icons/icons/dash-circle.svg" style="width: 1rem; cursor: pointer" onclick="onMinus()" />
+                    <input class="form-control quantity ms-3 me-3" name="quantity" type="text" value="1" aria-label="" style="width: 10%; text-align: center; padding: 0" readonly>
+                    <img class="plus" src="~/lib/bootstrap-icons/icons/plus-circle.svg" style="width: 1rem; cursor: pointer" onclick="onPlus()" />
                 </div>
                 <div class="col-auto mt-3">
                     <label class="visually-hidden" for="autoSizingInputGroup"></label>
@@ -31,31 +31,30 @@
                         <div class="input-group-text">
                             <img src="~/lib/bootstrap-icons/icons/card-text.svg" />
                         </div>
-                        <input type="text" class="form-control" id="autoSizingInputGroup" placeholder="Thêm ghi chú cho món này">
+                        <input type="text" name="note" class="form-control" placeholder="Thêm ghi chú cho món này">
                     </div>
                 </div>
                 <div class="col-12 mt-3">
                     <button type="submit" class="btn btn-outline-success">Thêm vào giỏ hàng</button>
                 </div>
-                
             }
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-    var quantity = parseInt(document.querySelector(".quantity").textContent);
+    var quantity = parseInt(document.querySelector(".quantity").value);
 
     function onMinus() {
         if (quantity > 1) {
             quantity--;
-            return document.querySelector(".quantity").innerHTML = quantity;
+            return document.querySelector(".quantity").value = quantity;
         }
         return
     }
 
     function onPlus() {
-        return document.querySelector(".quantity").innerHTML = ++quantity
+        return document.querySelector(".quantity").value = ++quantity
     }
 
     var toastTrigger = document.getElementById('liveToastBtn')

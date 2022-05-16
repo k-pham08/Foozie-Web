@@ -17,19 +17,20 @@ namespace Foozie_Web.Controllers
         // GET: ORDER
         public ActionResult Index()
         {
-
             var oRDERs = db.ORDERs.Include(o => o.USER);
             return View(oRDERs.ToList());
         }
 
         // GET: ORDER/Details/5
-        public ActionResult Details(Guid? id)
+        public ActionResult Details()
         {
-            if (id == null)
+            Guid cur_user = new Guid(Session["idUser"].ToString());
+            var data = db.ORDERs.Where(o => o.user_id.Equals(cur_user) && o.status == "Waiting");
+            if (data == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ORDER oRDER = db.ORDERs.Find(id);
+            ORDER oRDER = data.FirstOrDefault();
             if (oRDER == null)
             {
                 return HttpNotFound();

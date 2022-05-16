@@ -1,4 +1,6 @@
-﻿@model IEnumerable<Foozie_Web.Models.ORDER_DETAIL>
+﻿@using System.Globalization;
+
+@model IEnumerable<Foozie_Web.Models.ORDER_DETAIL>
 
 @{
     ViewBag.Title = "Index";
@@ -11,48 +13,56 @@
             Giỏ hàng
         </h2>
         @*<div class="address-show col"></div>
-        <div class="col text-end add-address">
-            <button class="btn btn-outline-success" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop">Thêm địa chỉ</button>
+            <div class="col text-end add-address">
+                <button class="btn btn-outline-success" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop">Thêm địa chỉ</button>
 
-            <div class="offcanvas offcanvas-top" tabindex="-1" id="offcanvasTop" aria-labelledby="offcanvasTopLabel">
-                <div class="offcanvas-header">
-                    <h5 id="offcanvasTopLabel">Thêm địa chỉ</h5>
-                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                <div class="offcanvas offcanvas-top" tabindex="-1" id="offcanvasTop" aria-labelledby="offcanvasTopLabel">
+                    <div class="offcanvas-header">
+                        <h5 id="offcanvasTopLabel">Thêm địa chỉ</h5>
+                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="mb-3 ms-3 me-3">
+                        <input type="text" class="form-control address" id="formGroupExampleInput" placeholder="Nhập địa chỉ của bạn">
+                    </div>
+                    <button class="btn btn-primary ms-3 me-3 confirm" onclick="onAddress()">Xác nhận</button>
                 </div>
-                <div class="mb-3 ms-3 me-3">
-                    <input type="text" class="form-control address" id="formGroupExampleInput" placeholder="Nhập địa chỉ của bạn">
-                </div>
-                <button class="btn btn-primary ms-3 me-3 confirm" onclick="onAddress()">Xác nhận</button>
-            </div>
-        </div>*@
+            </div>*@
     </div>
-    <ul class="list-group mt-3  ">
-        @foreach (var item in Model)
+    @if (Model.Any(o => o.ORDER.status != "Waiting"))
+    {
+        foreach (var item in Model)
         {
-            <li class="list-group-item d-flex">
-                <img src="~/Images/foods/@item.FOOD.FOOD_TYPE.code/@item.FOOD.thumbnail" class="rounded me-3" style="width: 10%" />
-                <div class="w-100">
-                    <h5>@item.FOOD.name</h5>
-                    <p class="">@item.FOOD.FOOD_TYPE.name</p>
-                    <p>Số lượng: <span class="quantity">@item.quantity</span></p>
-                </div>
-                <div class="flex-shrink-1 m-auto" style="color: red"><span class="price">@item.FOOD.price</span>đ</div>
-            </li>
+            <ul class="list-group mt-3  ">
+                <li class="list-group-item d-flex">
+                    <img src="~/Images/foods/@item.FOOD.FOOD_TYPE.code/@item.FOOD.thumbnail" class="rounded me-3" style="width: 10%" />
+                    <div class="w-100">
+                        <h5>@item.FOOD.name</h5>
+                        <div class="">@item.FOOD.FOOD_TYPE.name</div>
+                        <p>Ghi chú: <span>@item.note</span></p>
+                        <div class="d-flex">
+                            <div>Số lượng:</div>
+                            <img class="minus mb-3 ms-2 me-2" src="~/lib/bootstrap-icons/icons/dash-circle.svg" style="width: 1rem; cursor: pointer" onclick=onMinus("@item.food_id") />
+                            <p id="a-@item.food_id" class="quantity">@item.quantity</p>
+                            <img class="plus mb-3 ms-2" src="~/lib/bootstrap-icons/icons/plus-circle.svg" style="width: 1rem; cursor: pointer" onclick=onPlus("@item.food_id") />
+                        </div>
+                    </div>
+                    <div class="flex-shrink-1 m-auto" style="color: red"><span class="price @item.FOOD.price" id="a-@item.food_id">@(item.FOOD.price * item.quantity)</span>đ</div>
+                </li>
+            </ul>
+            <div class="d-flex mt-3">
+                <div class="me-3">Tổng số tiền:</div>
+                <h5 class="total" style="color:red"></h5>
+                @Html.ActionLink("Thanh toán", "Edit", "ORDER", new { item.order_id }, new { @class = "btn btn-success ms-auto" })
+            </div>
         }
-    </ul>
-    <div class="d-flex mt-3">
-        <div class="me-3">Tổng số tiền:</div>
-        <h5 class="total" style="color:red"></h5>
-        <span style="color:red">đ</span>
-        @Html.ActionLink("Thanh toán", "Edit", "ORDER", new { Model.FirstOrDefault().ORDER.order_id }, new { @class= "btn btn-success ms-auto" })
-    </div>
+
+    }
 </div>
 
 <script>
     var total = 0;
-    var price = document.querySelectorAll(".price")
     var quantity = document.querySelectorAll(".quantity")
-    var confimr = document.querySelector(".confirm")
+    var price = document.querySelectorAll(".price")
     var show = document.querySelector(".address-show")
     var address = document.querySelector(".address")
 
@@ -62,9 +72,37 @@
 
     document.querySelector(".total").innerHTML = total
 
+    function loadPrice(id) {
+        let price = parseInt(document.querySelector("span[id^=a-" + id + "]").className.split(' ')[1])
+        let quantity = parseInt(document.querySelector("#a-" + id).textContent)
+        document.querySelector("span[id^=a-" + id + "]").innerHTML = price * quantity
+    }
 
     function onAddress() {
         show.innerHTML = address.value
         document.querySelector(".offcanvas").setAttribute("style", "display: none")
     }
+
+    function onMinus(id) {
+        let price = parseInt(document.querySelector("span[id^=a-" + id + "]").className.split(' ')[1])
+        let quantity = parseInt(document.querySelector("#a-" + id).textContent)
+        if (quantity > 1) {
+            document.querySelector("#a-" + id).innerHTML = --quantity
+            document.querySelector("span[id^=a-" + id + "]").innerHTML = price * quantity
+            total -= price
+            document.querySelector(".total").innerHTML = total
+        }
+       
+    }
+
+    function onPlus(id) {
+        let price = parseInt(document.querySelector("span[id^=a-" + id + "]").className.split(' ')[1])
+        let quantity = parseInt(document.querySelector("#a-" + id).textContent)
+        document.querySelector("#a-" + id).innerHTML = ++quantity
+        document.querySelector("span[id^=a-" + id + "]").innerHTML = price * quantity
+        total += price
+        document.querySelector(".total").innerHTML = total
+    }
+
+    window.onload = loadPrice();
 </script>

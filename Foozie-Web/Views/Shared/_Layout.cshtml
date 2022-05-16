@@ -31,7 +31,7 @@
                             <span class="visually-hidden">unread messages</span>
                         </span>
                     </a>
-                    <a class="btn btn-light me-2" href="../Authentication/Login">Đăng Nhập</a>
+                    <a class="btn btn-light me-2" href="../../Authentication/Login">Đăng Nhập</a>
                 </form>
             </div>
         </nav>
@@ -44,19 +44,21 @@
                     <img src="~/Images/logo.png" class="img-fluid w-25" alt="">
                 </a>
                 <form class="d-flex">
-                    <a href="/Order_Detail/Index" class="btn btn-light me-2 position-relative" style="z-index: 2000">
-                        <img src="~/lib/bootstrap-icons/icons/bag.svg" />
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            99
-                            <span class="visually-hidden">unread messages</span>
-                        </span>
-                    </a>
+                    
+                        <a href="/Order/Details/" class="btn btn-light me-2 position-relative" style="z-index: 2000">
+                            <img src="~/lib/bootstrap-icons/icons/bag.svg" />
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                0
+                            </span>
+                        </a>
+                    
+
                     <div class="dropdown">
                         <button class="btn btn-light me-2" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                             <img src="~/lib/bootstrap-icons/icons/person-circle.svg" />
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <li><a class="dropdown-item" href="#">Tài khoản</a></li>
+                            <li><a class="dropdown-item" href="/Authentication/Details/@Session["idUser"].ToString()">Tài khoản</a></li>
                             <li><a class="dropdown-item" href="/Order/Index">Đơn hàng</a></li>
                             <li><hr class="dropdown-divider" /></li>
                             <li><a class="dropdown-item" href="../../Authentication/Logout">Đăng xuất</a></li>

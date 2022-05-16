@@ -101,14 +101,15 @@ namespace Foozie_Web.Controllers
         }
 
         // GET: ORDER_DETAIL/Delete/5
-        public ActionResult Delete(Guid? id)
+        public ActionResult Delete(Guid? orderId, Guid? foodId)
         {
-            if (id == null)
+            if (orderId == null || foodId == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                var err = new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return err;
             }
-            ORDER_DETAIL oRDER_DETAIL = db.ORDER_DETAIL.Find(id);
-            if (oRDER_DETAIL == null)
+            var data = db.ORDER_DETAIL.Where(o => o.order_id == orderId && o.food_id == foodId).ToList();
+            ORDER_DETAIL oRDER_DETAIL = data.FirstOrDefault(); if (oRDER_DETAIL == null)
             {
                 return HttpNotFound();
             }
@@ -118,12 +119,13 @@ namespace Foozie_Web.Controllers
         // POST: ORDER_DETAIL/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(Guid id)
+        public ActionResult DeleteConfirmed(Guid orderId, Guid foodId)
         {
-            ORDER_DETAIL oRDER_DETAIL = db.ORDER_DETAIL.Find(id);
+            var data = db.ORDER_DETAIL.Where(o => o.order_id == orderId && o.food_id == foodId).ToList();
+            ORDER_DETAIL oRDER_DETAIL = data.FirstOrDefault();
             db.ORDER_DETAIL.Remove(oRDER_DETAIL);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Details");
         }
 
         protected override void Dispose(bool disposing)

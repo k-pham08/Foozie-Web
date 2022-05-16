@@ -40,16 +40,27 @@ namespace Foozie_Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Details(Guid id, [Bind(Include = "order_id,food_id,quantity,note")] ORDER_DETAIL oRDER_DETAIL)
+        public ActionResult Details(Guid id, string note, int quantity, ORDER_DETAIL oRDER_DETAIL, [Bind(Include = "order_id,date,status,address,user_id")] ORDER oRDER)
         {
             if (ModelState.IsValid)
             {
                 Guid cur_user = new Guid(Session["idUser"].ToString());
-                var data = db.ORDERs.Where(o => o.user_id.Equals(cur_user));
-                oRDER_DETAIL.order_id = data.FirstOrDefault().order_id;
+                var data = db.ORDERs.Where(o => o.user_id.Equals(cur_user) && o.status == "Waiting");
+                var order = db.ORDERs.Any(o => o.status == "Waiting");
+                if (!order)
+                {
+                    oRDER.order_id = Guid.NewGuid();
+                    oRDER.user_id = new Guid(Session["idUser"].ToString());
+                    oRDER.date = DateTime.Now;
+                    oRDER.status = "Waiting";
+                    oRDER.total = 0;
+                    db.ORDERs.Add(oRDER);
+                    db.SaveChanges();
+                }
+                oRDER_DETAIL.order_id = data.First().order_id;
                 oRDER_DETAIL.food_id = id;
-                oRDER_DETAIL.quantity = 1;
-                oRDER_DETAIL.note = "";
+                oRDER_DETAIL.quantity = quantity;
+                oRDER_DETAIL.note = note;
                 db.ORDER_DETAIL.Add(oRDER_DETAIL);
                 db.SaveChanges();
                 ViewBag.success = "Thêm thành công";

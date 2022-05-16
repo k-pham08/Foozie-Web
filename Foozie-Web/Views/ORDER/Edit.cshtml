@@ -20,20 +20,24 @@
     @Html.HiddenFor(model => model.user_id)
     @Html.HiddenFor(model => model.status)
 
-    <ul class="list-group mt-3">
-        @foreach (var item in Model.ORDER_DETAIL)
-        {
-            <li class="list-group-item d-flex">
-                <img src="~/Images/foods/@item.FOOD.FOOD_TYPE.code/@item.FOOD.thumbnail" class="rounded me-3" style="width: 10%" />
-                <div class="w-100">
-                    <h5>@item.FOOD.name</h5>
-                    <p class="">@item.FOOD.FOOD_TYPE.name</p>
-                    <p>Số lượng: <span class="quantity">@item.quantity</span></p>
+<ul class="list-group mt-3">
+    @foreach (var item in Model.ORDER_DETAIL)
+    {
+        <li class="list-group-item d-flex">
+            <img src="~/Images/foods/@item.FOOD.FOOD_TYPE.code/@item.FOOD.thumbnail" class="rounded me-3" style="width: 10%" />
+            <div class="w-100">
+                <h5>@item.FOOD.name</h5>
+                <div class="">@item.FOOD.FOOD_TYPE.name</div>
+                <p>Ghi chú: <span>@item.note</span></p>
+                <div class="d-flex">
+                    <div class="me-2">Số lượng:</div>
+                    <p id="a-@item.food_id" class="quantity">@item.quantity</p>
                 </div>
-                <div class="flex-shrink-1 m-auto" style="color: red"><span class="price">@item.FOOD.price</span>đ</div>
-            </li>
-        }
-    </ul>
+            </div>
+            <div class="flex-shrink-1 m-auto" style="color: red"><span class="price @item.FOOD.price" id="a-@item.food_id">@(item.FOOD.price * item.quantity)</span>đ</div>
+        </li>
+    }
+</ul>
 
     <div class="form-group mt-3">
         @Html.LabelFor(model => model.date,"Ngày đặt", htmlAttributes: new { @class = "control-label col-md-2" })
