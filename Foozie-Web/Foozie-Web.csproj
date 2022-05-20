@@ -1990,6 +1990,7 @@
     <Content Include="Views\ORDER_DETAIL\Details.cshtml" />
     <Content Include="Views\ORDER_DETAIL\Edit.cshtml" />
     <Content Include="Views\ORDER_DETAIL\Index.cshtml" />
+    <Content Include="Views\Home\RenderBadge.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -11,6 +11,11 @@ namespace Foozie_Web.Controllers
     {
         private FoozieEntity db = new FoozieEntity();
 
+        public ActionResult RenderBadge()
+        {
+            return PartialView("RenderBadge");
+        }
+
         public ActionResult Index()
         {
             return View(db.FOOD_TYPE.ToList());

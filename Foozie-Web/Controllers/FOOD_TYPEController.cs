@@ -21,15 +21,21 @@ namespace Foozie_Web.Controllers
         }
 
         // GET: FOOD_TYPE/Details/5
-        public ActionResult Details(Guid? id)
+        public ActionResult Details(Guid? id, string search)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             FOOD_TYPE fOOD_TYPE = db.FOOD_TYPE.Find(id);
             List<FOOD> foodList = db.FOODs.Where(f => f.type_id.CompareTo(fOOD_TYPE.type_id) == 0).ToList();
-            
+
+            if (!String.IsNullOrEmpty(search))
+            {
+                foodList = foodList.Where(f => f.name.ToLower().Contains(search.ToLower())).ToList();
+            }
+
             if (fOOD_TYPE == null)
             {
                 return HttpNotFound();

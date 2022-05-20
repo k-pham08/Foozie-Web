@@ -94,6 +94,7 @@ namespace Foozie_Web.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index", "Home");
             }
+            
             ViewBag.user_id = new SelectList(db.USERs, "user_id", "type", oRDER.user_id);
             return View(oRDER);
         }

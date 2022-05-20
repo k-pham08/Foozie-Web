@@ -10,54 +10,63 @@
         <h2 class="col">
             Giỏ hàng
         </h2>
-        @*<div class="address-show col"></div>
-            <div class="col text-end add-address">
-                <button class="btn btn-outline-success" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop">Thêm địa chỉ</button>
-
-                <div class="offcanvas offcanvas-top" tabindex="-1" id="offcanvasTop" aria-labelledby="offcanvasTopLabel">
-                    <div class="offcanvas-header">
-                        <h5 id="offcanvasTopLabel">Thêm địa chỉ</h5>
-                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                    </div>
-                    <div class="mb-3 ms-3 me-3">
-                        <input type="text" class="form-control address" id="formGroupExampleInput" placeholder="Nhập địa chỉ của bạn">
-                    </div>
-                    <button class="btn btn-primary ms-3 me-3 confirm" onclick="onAddress()">Xác nhận</button>
-                </div>
-            </div>*@
     </div>
- 
+
+    <ul class="list-group mt-3  ">  
         @foreach (var item in Model.ORDER_DETAIL)
         {
-            <ul class="list-group mt-3  ">
-                <li class="list-group-item d-flex">
-                    <img src="~/Images/foods/@item.FOOD.FOOD_TYPE.code/@item.FOOD.thumbnail" class="rounded me-3" style="width: 10%" />
-                    <div class="w-100">
-                        <h5>@item.FOOD.name</h5>
-                        <div class="">@item.FOOD.FOOD_TYPE.name</div>
-                        <p>Ghi chú: <span>@item.note</span></p>
-                        <div class="d-flex">
-                            <div>Số lượng:</div>
-                            <img class="minus mb-3 ms-2 me-2" src="~/lib/bootstrap-icons/icons/dash-circle.svg" style="width: 1rem; cursor: pointer" onclick=onMinus("@item.food_id") />
-                            <p id="a-@item.food_id" class="quantity">@item.quantity</p>
-                            <img class="plus mb-3 ms-2" src="~/lib/bootstrap-icons/icons/plus-circle.svg" style="width: 1rem; cursor: pointer" onclick=onPlus("@item.food_id") />
-                        </div>
+        <li class="list-group-item d-flex" id="li-@item.food_id">
+            <img src="~/Images/foods/@item.FOOD.FOOD_TYPE.code/@item.FOOD.thumbnail" class="rounded me-3" style="width: 10%" />
+            <div class="w-100">
+                <h5>@item.FOOD.name</h5>
+                <div class="">@item.FOOD.FOOD_TYPE.name</div>
+                <p>Ghi chú: <span>@item.note</span></p>
+                @using (Html.BeginForm("Edit", "ORDER_DETAIL", new { orderId = Model.order_id, foodId = item.food_id }, FormMethod.Post))
+                {
+                    @Html.HttpMethodOverride(HttpVerbs.Put)
+                    <div class="d-flex">
+                        <div>Số lượng:</div>
+                        <button type="submit" style="background: none; border: none">
+                            <img class="minus  ms-2 me-2" src="~/lib/bootstrap-icons/icons/dash-circle.svg" style="width: 1rem; cursor: pointer" onclick=onMinus("@item.food_id") />
+                        </button>
+                        <input id="a-@item.food_id" class="form-control quantity" name="quantity" type="text" value="@item.quantity" aria-label="" style="width: 10%; text-align: center; padding: 0; height: fit-content" readonly>
+                        <button type="submit" style="background: none; border: none">
+                            <img class="plus ms-2" src="~/lib/bootstrap-icons/icons/plus-circle.svg" style="width: 1rem; cursor: pointer" onclick=onPlus("@item.food_id") />
+                        </button>
                     </div>
-                    <div class="d-flex flex-wrap wrap justify-content-end">
-                        @Html.ActionLink("Xoa", "Delete", "ORDER_DETAIL", new { orderId = item.order_id, foodId = item.food_id }, new { @class = "btn btn-success ms-auto" })
-                        <img src="~/lib/bootstrap-icons/icons/x-square.svg" class="float-end"/>
-                        <div style="color: red"><span class="price @item.FOOD.price" id="a-@item.food_id">@(item.FOOD.price * item.quantity)</span>đ</div>
+                }
 
-                    </div>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; justify-content:end">
 
-                </li>
-            </ul>
+                @using (Html.BeginForm("Delete", "ORDER_DETAIL", new { orderId = Model.order_id, foodId = item.food_id }, FormMethod.Post))
+                {
+                    @Html.HttpMethodOverride(HttpVerbs.Delete)
+                    <button type="submit" class="btn-@item.food_id" style="background: none; border: none">
+                        <img src="~/lib/bootstrap-icons/icons/x-square.svg"/>
+                    </button>
+                }
+                <div style="color: red"><span class="price @item.FOOD.price" id="a-@item.food_id">@(item.FOOD.price)</span>đ</div>
+            </div>
+
+        </li>
+
         }
-        <div class="d-flex mt-3">
-            <div class="me-3">Tổng số tiền:</div>
-            <h5 class="total" style="color:red"></h5>
-            @Html.ActionLink("Thanh toán", "Edit", "ORDER", new { Model.order_id }, new { @class = "btn btn-success ms-auto" })
+    </ul>
+    @if (Model.ORDER_DETAIL.Count == 0)
+    {
+        <div class="alert alert-warning" role="alert">
+            Vui lòng thêm món ăn vào giỏ hàng
         </div>
+    }
+    else
+    {
+<div class="d-flex mt-3">
+    <div class="me-3">Tổng số tiền:</div>
+    <h5 class="total" style="color:red"></h5>
+    @Html.ActionLink("Thanh toán", "Edit", "ORDER", new { Model.order_id }, new { @class = "btn btn-success ms-auto" })
+</div>
+    }
 </div>
 
 <script>
@@ -67,17 +76,12 @@
     var show = document.querySelector(".address-show")
     var address = document.querySelector(".address")
 
+
     for (let i = 0; i < price.length; i++) {
-        total += parseInt(price[i].textContent) * parseInt(quantity[i].textContent);
+        total += parseInt(price[i].textContent) * parseInt(quantity[i].value);
     }
 
     document.querySelector(".total").innerHTML = total
-
-    function loadPrice(id) {
-        let price = parseInt(document.querySelector("span[id^=a-" + id + "]").className.split(' ')[1])
-        let quantity = parseInt(document.querySelector("#a-" + id).textContent)
-        document.querySelector("span[id^=a-" + id + "]").innerHTML = price * quantity
-    }
 
     function onAddress() {
         show.innerHTML = address.value
@@ -86,10 +90,9 @@
 
     function onMinus(id) {
         let price = parseInt(document.querySelector("span[id^=a-" + id + "]").className.split(' ')[1])
-        let quantity = parseInt(document.querySelector("#a-" + id).textContent)
+        let quantity = parseInt(document.getElementById("a-" + id).value)
         if (quantity > 1) {
-            document.querySelector("#a-" + id).innerHTML = --quantity
-            document.querySelector("span[id^=a-" + id + "]").innerHTML = price * quantity
+            document.getElementById("a-" + id).value = --quantity
             total -= price
             document.querySelector(".total").innerHTML = total
         }
@@ -98,12 +101,11 @@
 
     function onPlus(id) {
         let price = parseInt(document.querySelector("span[id^=a-" + id + "]").className.split(' ')[1])
-        let quantity = parseInt(document.querySelector("#a-" + id).textContent)
-        document.querySelector("#a-" + id).innerHTML = ++quantity
-        document.querySelector("span[id^=a-" + id + "]").innerHTML = price * quantity
+        let quantity = parseInt(document.getElementById("a-" + id).value)
+        document.getElementById("a-" + id).value = ++quantity
         total += price
         document.querySelector(".total").innerHTML = total
     }
+    
 
-    window.onload = loadPrice();
 </script>

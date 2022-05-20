@@ -66,66 +66,64 @@ namespace Foozie_Web.Controllers
         }
 
         // GET: ORDER_DETAIL/Edit/5
-        public ActionResult Edit(Guid? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            ORDER_DETAIL oRDER_DETAIL = db.ORDER_DETAIL.Find(id);
-            if (oRDER_DETAIL == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.food_id = new SelectList(db.FOODs, "food_id", "name", oRDER_DETAIL.food_id);
-            ViewBag.order_id = new SelectList(db.ORDERs, "order_id", "status", oRDER_DETAIL.order_id);
-            return View(oRDER_DETAIL);
-        }
+        //public ActionResult Edit(Guid? orderId, Guid? foodId)
+        //{
+        //    if (orderId == null && foodId == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    var oRDER_DETAIL = db.ORDER_DETAIL.Where(o => o.order_id == orderId && o.food_id == foodId);
+        //    if (oRDER_DETAIL == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    //ViewBag.food_id = new SelectList(db.FOODs, "food_id", "name", oRDER_DETAIL.food_id);
+        //    //ViewBag.order_id = new SelectList(db.ORDERs, "order_id", "status", oRDER_DETAIL.order_id);
+        //    return View();
+        //}
 
         // POST: ORDER_DETAIL/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "order_id,food_id,quantity,note")] ORDER_DETAIL oRDER_DETAIL)
+        [HttpPut]
+        public ActionResult Edit(Guid orderId, Guid foodId, int quantity)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(oRDER_DETAIL).State = EntityState.Modified;
+                var oRDER_DETAIL = db.ORDER_DETAIL.Where(o => o.order_id == orderId && o.food_id == foodId).ToList();
+                oRDER_DETAIL.FirstOrDefault().quantity = quantity;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", "Order");
             }
-            ViewBag.food_id = new SelectList(db.FOODs, "food_id", "name", oRDER_DETAIL.food_id);
-            ViewBag.order_id = new SelectList(db.ORDERs, "order_id", "status", oRDER_DETAIL.order_id);
-            return View(oRDER_DETAIL);
+            
+            return View();
         }
 
-        // GET: ORDER_DETAIL/Delete/5
-        public ActionResult Delete(Guid? orderId, Guid? foodId)
-        {
-            if (orderId == null || foodId == null)
-            {
-                var err = new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-                return err;
-            }
-            var data = db.ORDER_DETAIL.Where(o => o.order_id == orderId && o.food_id == foodId).ToList();
-            ORDER_DETAIL oRDER_DETAIL = data.FirstOrDefault(); if (oRDER_DETAIL == null)
-            {
-                return HttpNotFound();
-            }
-            return View(oRDER_DETAIL);
-        }
+        //// GET: ORDER_DETAIL/Delete/5
+        //public ActionResult Delete(Guid? orderId, Guid? foodId)
+        //{
+        //    if (orderId == null || foodId == null)
+        //    {
+        //        var err = new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //        return err;
+        //    }
+        //    var data = db.ORDER_DETAIL.Where(o => o.order_id == orderId && o.food_id == foodId).ToList();
+        //    ORDER_DETAIL oRDER_DETAIL = data.FirstOrDefault(); if (oRDER_DETAIL == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(oRDER_DETAIL);
+        //}
 
         // POST: ORDER_DETAIL/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(Guid orderId, Guid foodId)
+        [HttpDelete]
+        public ActionResult Delete(Guid orderId, Guid foodId)
         {
             var data = db.ORDER_DETAIL.Where(o => o.order_id == orderId && o.food_id == foodId).ToList();
             ORDER_DETAIL oRDER_DETAIL = data.FirstOrDefault();
             db.ORDER_DETAIL.Remove(oRDER_DETAIL);
             db.SaveChanges();
-            return RedirectToAction("Details");
+            return RedirectToAction("Details", "ORDER");
         }
 
         protected override void Dispose(bool disposing)

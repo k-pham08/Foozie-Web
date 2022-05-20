@@ -47,6 +47,7 @@ namespace Foozie_Web.Controllers
                 Guid cur_user = new Guid(Session["idUser"].ToString());
                 var data = db.ORDERs.Where(o => o.user_id.Equals(cur_user) && o.status == "Waiting");
                 var order = db.ORDERs.Any(o => o.status == "Waiting");
+                var orderDetail = db.ORDER_DETAIL.FirstOrDefault(model => model.food_id == id);
                 if (!order)
                 {
                     oRDER.order_id = Guid.NewGuid();
@@ -57,14 +58,20 @@ namespace Foozie_Web.Controllers
                     db.ORDERs.Add(oRDER);
                     db.SaveChanges();
                 }
-                oRDER_DETAIL.order_id = data.First().order_id;
-                oRDER_DETAIL.food_id = id;
-                oRDER_DETAIL.quantity = quantity;
-                oRDER_DETAIL.note = note;
-                db.ORDER_DETAIL.Add(oRDER_DETAIL);
+                if (orderDetail != null)
+                {
+                    orderDetail.quantity+= quantity;
+                } else
+                {
+                    oRDER_DETAIL.order_id = data.First().order_id;
+                    oRDER_DETAIL.food_id = id;
+                    oRDER_DETAIL.quantity = quantity;
+                    oRDER_DETAIL.note = note;
+                    db.ORDER_DETAIL.Add(oRDER_DETAIL);
+                }
                 db.SaveChanges();
                 ViewBag.success = "Thêm thành công";
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Details", "Order");
             }
 
             ViewBag.food_id = new SelectList(db.FOODs, "food_id", "name", oRDER_DETAIL.food_id);
