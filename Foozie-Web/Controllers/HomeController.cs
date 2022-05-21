@@ -16,8 +16,19 @@ namespace Foozie_Web.Controllers
             return PartialView("RenderBadge");
         }
 
-        public ActionResult Index()
+        public ActionResult Index([Bind(Include = "order_id,date,status,address,user_id")] ORDER oRDER)
         {
+            var order = db.ORDERs.Any(o => o.status == "Waiting");
+            if (!order && Session["idUser"] != null)
+            {
+                oRDER.order_id = Guid.NewGuid();
+                oRDER.user_id = new Guid(Session["idUser"].ToString());
+                oRDER.date = DateTime.Now;
+                oRDER.status = "Waiting";
+                oRDER.total = 0;
+                db.ORDERs.Add(oRDER);
+                db.SaveChanges();
+            }
             return View(db.FOOD_TYPE.ToList());
         }
 

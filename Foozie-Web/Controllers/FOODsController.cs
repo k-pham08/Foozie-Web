@@ -13,9 +13,7 @@ namespace Foozie_Web.Controllers
     public class FOODsController : Controller
     {
         private FoozieEntity db = new FoozieEntity();
-
-        
-
+       
         // GET: FOODs
         public ActionResult Index()
         {
@@ -40,36 +38,28 @@ namespace Foozie_Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Details(Guid id, string note, int quantity, ORDER_DETAIL oRDER_DETAIL, [Bind(Include = "order_id,date,status,address,user_id")] ORDER oRDER)
+        public ActionResult Details(Guid id, string note, int quantity, ORDER_DETAIL oRDER_DETAIL)
         {
             if (ModelState.IsValid)
             {
                 Guid cur_user = new Guid(Session["idUser"].ToString());
-                var data = db.ORDERs.Where(o => o.user_id.Equals(cur_user) && o.status == "Waiting");
-                var order = db.ORDERs.Any(o => o.status == "Waiting");
-                var orderDetail = db.ORDER_DETAIL.FirstOrDefault(model => model.food_id == id);
-                if (!order)
+                var data = db.ORDERs.Where(o => o.status == "Waiting" && o.user_id.Equals(cur_user)).Select(o => o.order_id).ToList();
+                //var order = db.ORDERs.Include(o => o.status);
+                var orderDetail = db.ORDER_DETAIL.Where(model => model.food_id == id && model.order_id == data.FirstOrDefault()).ToList();
+
+                if (orderDetail.Count != 0)
                 {
-                    oRDER.order_id = Guid.NewGuid();
-                    oRDER.user_id = new Guid(Session["idUser"].ToString());
-                    oRDER.date = DateTime.Now;
-                    oRDER.status = "Waiting";
-                    oRDER.total = 0;
-                    db.ORDERs.Add(oRDER);
-                    db.SaveChanges();
+                    orderDetail.FirstOrDefault().quantity += quantity;
                 }
-                if (orderDetail != null)
+                else
                 {
-                    orderDetail.quantity+= quantity;
-                } else
-                {
-                    oRDER_DETAIL.order_id = data.First().order_id;
+                    oRDER_DETAIL.order_id = data.First();
                     oRDER_DETAIL.food_id = id;
                     oRDER_DETAIL.quantity = quantity;
                     oRDER_DETAIL.note = note;
                     db.ORDER_DETAIL.Add(oRDER_DETAIL);
-                }
-                db.SaveChanges();
+            }
+            db.SaveChanges();
                 ViewBag.success = "Thêm thành công";
                 return RedirectToAction("Details", "Order");
             }
