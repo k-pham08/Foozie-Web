@@ -25,10 +25,10 @@ namespace Foozie_Web.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<FOOD> FOODs { get; set; }
         public virtual DbSet<FOOD_TYPE> FOOD_TYPE { get; set; }
-        public virtual DbSet<USER> USERs { get; set; }
-        public virtual DbSet<ORDER> ORDERs { get; set; }
         public virtual DbSet<ORDER_DETAIL> ORDER_DETAIL { get; set; }
+        public virtual DbSet<FOOD> FOODs { get; set; }
+        public virtual DbSet<ORDER> ORDERs { get; set; }
+        public virtual DbSet<USER> USERs { get; set; }
     }
 }

@@ -7,64 +7,58 @@
 
 <h2>User</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.type)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.first_name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.last_name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.email)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.phone)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.username)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.password)
-        </th>
-        <th></th>
-    </tr>
+<div class="table-responsive table-boderless">
+    <div class="d-flex justify-content-between">
+        <input class="form-control w-25 m-1"
+               type="text"
+               placeholder="Search"
+               aria-label="Search" />
+        @Html.ActionLink("Add", "AddUser", "Admin", new { @class = "btn btn-success m-1" })
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Type</th>
+                <th scope="col">id</th>
+                <th scope="col">Username</th>
+                <th scope="col">First name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Phone</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.type</td>
+                    <td>@user.user_id</td>
+                    <td>@user.username</td>
+                    <td>@user.first_name</td>
+                    <td>@user.last_name</td>
+                    <td>@user.email</td>
+                    <td><span>@user.phone</span></td>
+                    <td></td>
+                    <td class="d-flex flex-wrap wrap">
+                        <button class="btn btn-primary" style="background: none; border: none" onclick="location.href = '/Admin/EditUser/@user.user_id';">
+                            <img src="~/lib/bootstrap-icons/icons/pencil-fill.svg" />
+                        </button>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.type)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.first_name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.last_name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.phone)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.username)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.password)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.user_id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.user_id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.user_id })
-        </td>
-    </tr>
-}
+                        @using (Html.BeginForm("DeleteUser", "Admin", new { userId = user.user_id }, FormMethod.Post))
+                        {
+                            @Html.HttpMethodOverride(HttpVerbs.Delete)
 
-</table>
+                            <button class="btn btn-primary" type="submit" style="background: none; border: none" id="">
+                                <img src="~/lib/bootstrap-icons/icons/trash-fill.svg" />
+                            </button>
+                        }
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+

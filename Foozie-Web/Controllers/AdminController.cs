@@ -30,6 +30,53 @@ namespace Foozie_Web.Controllers
             return View(orders.ToList());
         }
 
+        public ActionResult EditOrder(Guid? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            ORDER oRDER = db.ORDERs.Find(id);
+            if (oRDER == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.user_id = new SelectList(db.USERs, "user_id", "type", oRDER.user_id);
+            return View(oRDER);
+        }
+
+        // POST: ORDER/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditOrder([Bind(Include = "order_id,date,status,address,total,user_id")] ORDER oRDER)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(oRDER).State = EntityState.Modified;
+                oRDER.date = DateTime.Now;
+                oRDER.status = "Payment";
+                db.SaveChanges();
+                return RedirectToAction("Order");
+            }
+
+            ViewBag.user_id = new SelectList(db.USERs, "user_id", "type", oRDER.user_id);
+            return View(oRDER);
+        }
+
+        [HttpDelete]
+        public ActionResult DeleteOrder(Guid orderId)
+        {
+            ORDER order = db.ORDERs.Find(orderId);
+            List<ORDER_DETAIL> details = db.ORDER_DETAIL.Where(o => o.order_id == orderId).ToList();
+            foreach (ORDER_DETAIL detail in details)
+                db.ORDER_DETAIL.Remove(detail);
+            db.ORDERs.Remove(order);
+            db.SaveChanges();
+            return RedirectToAction("Order", "Admin");
+        }
+
         public ActionResult Product()
         {
             var foods = db.FOODs.Include(f => f.FOOD_TYPE).ToList();
@@ -99,21 +146,81 @@ namespace Foozie_Web.Controllers
             return RedirectToAction("Product", "Admin");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
         public ActionResult User()
         {
             var users = db.USERs.Include(u => u.ORDERs).ToList();
             return View(users);
         }
 
+        public ActionResult AddUser()
+        {
+            return View();
+        }
+
+        // POST: User/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddUser([Bind(Include = "user_id,type,first_name,last_name,email,phone,username,password")] USER uSER)
+        {
+            if (ModelState.IsValid)
+            {
+                uSER.user_id = Guid.NewGuid();
+                db.USERs.Add(uSER);
+                db.SaveChanges();
+                return RedirectToAction("User");
+            }
+
+            return View(uSER);
+        }
+
+        public ActionResult EditUser(Guid? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            USER uSER = db.USERs.Find(id);
+            if (uSER == null)
+            {
+                return HttpNotFound();
+            }
+            return View(uSER);
+        }
+
+        // POST: User/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditUser([Bind(Include = "user_id,type,first_name,last_name,email,phone,username,password")] USER uSER)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(uSER).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("User");
+            }
+            return View(uSER);
+        }
+
+        [HttpDelete]
+        public ActionResult DeleteUser(Guid userId)
+        {
+            USER user = db.USERs.Find(userId);
+            List<ORDER> orders = db.ORDERs.Where(o => o.user_id == userId).ToList();
+            foreach(ORDER order in orders)
+            {
+                List<ORDER_DETAIL> details = db.ORDER_DETAIL.Where(d => d.order_id == order.order_id).ToList();
+                foreach (ORDER_DETAIL detail in details)
+                    db.ORDER_DETAIL.Remove(detail);
+                db.ORDERs.Remove(order);
+            }
+            db.USERs.Remove(user);
+            db.SaveChanges();
+            return RedirectToAction("User", "Admin");
+        }
 
     }
 }

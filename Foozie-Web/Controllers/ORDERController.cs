@@ -90,6 +90,7 @@ namespace Foozie_Web.Controllers
             if (ModelState.IsValid)
             {      
                 db.Entry(oRDER).State = EntityState.Modified;
+                oRDER.date = DateTime.Now;
                 oRDER.status = "Payment";
                 db.SaveChanges();
                 return RedirectToAction("Index", "Home");

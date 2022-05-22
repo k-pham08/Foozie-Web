@@ -24,7 +24,7 @@ namespace Foozie_Web.Models
         public string name { get; set; }
         public string description { get; set; }
         public string thumbnail { get; set; }
-        public Nullable<decimal> price { get; set; }
+        public Nullable<int> price { get; set; }
         public Nullable<bool> is_delete { get; set; }
         public System.Guid type_id { get; set; }
     
