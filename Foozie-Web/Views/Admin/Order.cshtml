@@ -1,0 +1,103 @@
+﻿@model IEnumerable<Foozie_Web.Models.ORDER>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<h2>Orders</h2>
+<div class="table-responsive">
+    <input class="form-control w-25"
+           type="text"
+           placeholder="Search"
+           aria-label="Search" />
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">id</th>
+                <th scope="col">Date</th>
+                <th scope="col">Address</th>
+                <th scope="col">Total</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>@order.order_id</td>
+                    <td>@order.date</td>
+                    <td>@order.address</td>
+                    <td>@order.total</td>
+                    <td>
+
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" style="background: none; border: none" id="e-@order.order_id" onclick=passEdit("@order.order_id")>
+                            <img src="~/lib/bootstrap-icons/icons/pencil-fill.svg" />
+                        </button>
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" style="background: none; border: none" id="d-@order.order_id" onclick=passData("@order.order_id")>
+                            <img src="~/lib/bootstrap-icons/icons/trash-fill.svg" />
+                        </button>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Delete Order</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Do you want to delete order <span class="badge bg-danger delete-order"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Detail Order</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body edit-order">
+                    <ul class="list-group mt-3">
+                        
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    function passData(id) {
+        document.querySelector(".delete-order").innerHTML = id
+    }
+
+    function passEdit(id) {
+        document.querySelector(".edit-order").innerHTML = id
+
+    }
+
+</script>
+
+

@@ -1,0 +1,61 @@
+﻿@model IEnumerable<Foozie_Web.Models.FOOD>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>FOOD</h2>
+
+<div class="table-responsive">
+    <div class="d-flex justify-content-between">
+        <input class="form-control w-25 m-1"
+               type="text"
+               placeholder="Search"
+               aria-label="Search" />
+        @Html.ActionLink("Add", "AddProduct", "Admin", new { @class = "btn btn-success m-1" })
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">id</th>
+                <th scope="col">Name</th>
+                <th scope="col">Price</th>
+                <th scope="col">Type</th>
+                <th scope="col">Description</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var food in Model)
+            {
+                <tr>
+                    <td>@food.food_id</td>
+                    <td id="food-name">@food.name</td>
+                    <td>@food.price</td>
+                    <td>@food.FOOD_TYPE.name</td>
+                    <td></td>
+                    <td class="d-flex">
+                        <button style="background: none; border: none" onclick="location.href = '/Admin/EditProduct/@food.food_id';">
+                            <img src="~/lib/bootstrap-icons/icons/pencil-fill.svg" />
+                        </button>
+
+                        @using (Html.BeginForm("DeleteFood", "Admin", new { foodId = food.food_id }, FormMethod.Post))
+                        {
+                            @Html.HttpMethodOverride(HttpVerbs.Delete)
+
+                            <button type="submit" style="background: none; border: none" id="">
+                                <img src="~/lib/bootstrap-icons/icons/trash-fill.svg" />
+                            </button>
+                        }
+
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+

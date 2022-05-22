@@ -80,7 +80,7 @@ namespace Foozie_Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(string username, string password, [Bind(Include = "order_id,date,status,address,user_id")] ORDER oRDER)
+        public ActionResult Login(string username, string password)
         {
             if (ModelState.IsValid)
             {
@@ -89,8 +89,19 @@ namespace Foozie_Web.Controllers
                 var data = db.USERs.Where(s => s.username.Equals(username) && s.password.Equals(f_password)).ToList();
                 if (data.Count() > 0)
                 {
-                    Session["idUser"] = data.FirstOrDefault().user_id;
-                    return RedirectToAction("Index", "Home");
+                    if (data.FirstOrDefault().type == "USER")
+                    {
+                        Session["idUser"] = data.FirstOrDefault().user_id;
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        HttpCookie adminCookie = new HttpCookie("admin");
+                        adminCookie.Value = data.FirstOrDefault().username;
+                        adminCookie.Expires = DateTime.Now.AddDays(1);
+                        Response.Cookies.Add(adminCookie);
+                        return RedirectToAction("Index", "Admin");
+                    }
                 }
                 else
                 {
@@ -106,6 +117,13 @@ namespace Foozie_Web.Controllers
         public ActionResult LogOut()
         {
             Session.RemoveAll();
+            if (Request.Cookies["admin"] != null)
+            {
+                HttpCookie admin = Request.Cookies["admin"];
+
+                admin.Expires = DateTime.Now.AddDays(-1);
+                Response.Cookies.Add(admin);
+            }
             return RedirectToAction("Index", "Home");
         }
         
