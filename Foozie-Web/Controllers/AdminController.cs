@@ -20,13 +20,24 @@ namespace Foozie_Web.Controllers
         // GET: Admin
         public ActionResult Index()
         {
-            var oRDERs = db.ORDERs.Where(o => o.status != "Waiting");
-            return View(oRDERs.ToList());
+            if (Request.Cookies["admin"] != null)
+            {
+                List<ORDER> orders = db.ORDERs.ToList();
+                return View(orders);
+            }
+            return RedirectToAction("Login", "Authentication");
         }
 
-        public ActionResult Order()
+        public ActionResult Order(string start, string end)
         {
             var orders = db.ORDERs.Where(o => o.status != "Waiting");
+
+            if (!String.IsNullOrEmpty(start) && !String.IsNullOrEmpty(end))
+            {
+                DateTime startDate = DateTime.Parse(start);
+                DateTime endDate = DateTime.Parse(end);
+                orders = orders.Where(o => o.date >= startDate && o.date <= endDate);
+            }
             return View(orders.ToList());
         }
 
@@ -77,9 +88,17 @@ namespace Foozie_Web.Controllers
             return RedirectToAction("Order", "Admin");
         }
 
-        public ActionResult Product()
+        public ActionResult Product(string search, string type)
         {
             var foods = db.FOODs.Include(f => f.FOOD_TYPE).ToList();
+            if (!String.IsNullOrEmpty(search))
+            {
+                foods = foods.Where(f => f.name.ToLower().Contains(search.ToLower())).ToList();
+            }
+            if (!String.IsNullOrEmpty(type) && type != "ALL")
+            {
+                foods = foods.Where(f => f.FOOD_TYPE.code == type).ToList();
+            }
             return View(foods);
         }
 
@@ -152,9 +171,18 @@ namespace Foozie_Web.Controllers
             return View(users);
         }
 
-        public ActionResult AddUser()
+        public ActionResult UserDetails(Guid? id)
         {
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            USER users  = db.USERs.Find(id);
+            if (users == null)
+            {
+                return HttpNotFound();
+            }
+            return View(users);
         }
 
         // POST: User/Create

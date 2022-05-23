@@ -23,7 +23,7 @@ namespace Foozie_Web.Controllers
             {
                 oRDER.order_id = Guid.NewGuid();
                 oRDER.user_id = new Guid(Session["idUser"].ToString());
-                oRDER.date = DateTime.Now;
+                oRDER.date = DateTime.Parse("01/01/2000");
                 oRDER.status = "Waiting";
                 oRDER.total = 0;
                 db.ORDERs.Add(oRDER);

@@ -15,11 +15,10 @@
                aria-label="Search" />
         @Html.ActionLink("Add", "AddUser", "Admin", new { @class = "btn btn-success m-1" })
     </div>
-    <table class="table">
+    <table class="table table-boderless table-hover">
         <thead>
             <tr>
                 <th scope="col">Type</th>
-                <th scope="col">id</th>
                 <th scope="col">Username</th>
                 <th scope="col">First name</th>
                 <th scope="col">Last Name</th>
@@ -33,7 +32,6 @@
             {
                 <tr>
                     <td>@user.type</td>
-                    <td>@user.user_id</td>
                     <td>@user.username</td>
                     <td>@user.first_name</td>
                     <td>@user.last_name</td>
@@ -53,6 +51,10 @@
                                 <img src="~/lib/bootstrap-icons/icons/trash-fill.svg" />
                             </button>
                         }
+
+                        <button class="btn btn-primary" style="background: none; border: none" onclick="location.href = '/Admin/UserDetails/@user.user_id';">
+                            <img src="~/lib/bootstrap-icons/icons/clipboard-check-fill.svg" />
+                        </button>
 
                     </td>
                 </tr>
