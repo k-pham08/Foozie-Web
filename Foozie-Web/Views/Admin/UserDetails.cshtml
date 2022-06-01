@@ -40,14 +40,14 @@
                             <button class="btn btn-primary" type="button" style="background: none; border: none" onclick="location.href = '/Admin/EditOrder/@order.order_id';">
                                 <img src="~/lib/bootstrap-icons/icons/pencil-fill.svg" />
                             </button>
-                            @using (Html.BeginForm("DeleteOrder", "Admin", new { orderId = order.order_id }, FormMethod.Post))
+                            @*@using (Html.BeginForm("DeleteOrder", "Admin", new { orderId = order.order_id }, FormMethod.Post))
                             {
                                 @Html.HttpMethodOverride(HttpVerbs.Delete)
 
                                 <button type="submit" class="btn btn-primary" style="background: none; border: none">
                                     <img src="~/lib/bootstrap-icons/icons/trash-fill.svg" />
                                 </button>
-                            }
+                            }*@
                             <button style="background: none; border: none" class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#o-@order.order_id" aria-expanded="false" aria-controls="collapseExample">
                                 <img src="~/lib/bootstrap-icons/icons/caret-down-fill.svg" />
                             </button>

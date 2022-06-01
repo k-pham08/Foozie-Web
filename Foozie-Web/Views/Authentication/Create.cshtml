@@ -17,24 +17,24 @@
         <div class="form-group mt-3">
             @Html.LabelFor(model => model.first_name, "Tên", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="">
-                @Html.EditorFor(model => model.first_name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.first_name, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.first_name, new { htmlAttributes = new { @class = "form-control"} })
+                @Html.ValidationMessageFor(model => model.first_name, "", new { @class = "badge bg-danger" })
             </div>
         </div>
 
         <div class="form-group mt-3">
             @Html.LabelFor(model => model.last_name, "Họ", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="">
-                @Html.EditorFor(model => model.last_name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.last_name, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.last_name, new { htmlAttributes = new { @class = "form-control"} })
+                @Html.ValidationMessageFor(model => model.last_name, "", new { @class = "badge bg-danger" })
             </div>
         </div>
 
         <div class="form-group mt-3">
             @Html.LabelFor(model => model.email, "Email", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="">
-                @Html.EditorFor(model => model.email, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.email, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.email, new { htmlAttributes = new { @class = "form-control"} })
+                @Html.ValidationMessageFor(model => model.email, "", new { @class = "badge bg-danger" })
                 @if(ViewBag.error != null)
                 {
                     <span class="badge bg-danger">@ViewBag.error</span>
@@ -45,24 +45,24 @@
         <div class="form-group mt-3">
             @Html.LabelFor(model => model.phone, "Số điện thoại", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="">
-                @Html.EditorFor(model => model.phone, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.phone, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.phone, new { htmlAttributes = new { @class = "form-control"} })
+                @Html.ValidationMessageFor(model => model.phone, "", new { @class = "badge bg-danger" })
             </div>
         </div>
 
         <div class="form-group mt-3">
             @Html.LabelFor(model => model.username, "Tên đăng nhập", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="">
-                @Html.EditorFor(model => model.username, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.username, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.username, new { htmlAttributes = new { @class = "form-control"} })
+                @Html.ValidationMessageFor(model => model.username, "", new { @class = "badge bg-danger" })
             </div>
         </div>
 
         <div class="form-group mt-3">
             @Html.LabelFor(model => model.password, "Mật khẩu", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="">
-                @Html.EditorFor(model => model.password, new { htmlAttributes = new { @class = "form-control", @type = "password" } })
-                @Html.ValidationMessageFor(model => model.password, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.password, new { htmlAttributes = new { @class = "form-control", @type = "password"} })
+                @Html.ValidationMessageFor(model => model.password, "", new { @class = "badge bg-danger" })
             </div>
         </div>
 

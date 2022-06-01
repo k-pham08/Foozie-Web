@@ -13,6 +13,8 @@ namespace Foozie_Web.Controllers
 
         public ActionResult RenderBadge()
         {
+            List<ORDER_DETAIL> details = db.ORDER_DETAIL.ToList();
+            ViewBag.Qty = details.Count;
             return PartialView("RenderBadge");
         }
 

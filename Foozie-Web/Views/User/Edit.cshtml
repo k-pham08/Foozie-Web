@@ -1,0 +1,66 @@
+﻿@model Foozie_Web.Models.USER
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.user_id)
+    @Html.HiddenFor(model => model.type)
+    @Html.HiddenFor(model => model.username)
+    @Html.HiddenFor(model => model.password)
+
+    <div class="container rounded bg-white mt-5 mb-5">
+        <div class="row">
+            <div class="col-md-5 border-right">
+                <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+                    <img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg">
+                    <span class="font-weight-bold">@Model.first_name @Model.last_name</span>
+                    <span class="text-black-50">@Model.email</span>
+                </div>
+            </div>
+            <div class="col-md-5 border-right">
+                <div class="p-3 py-5">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="text-right">Thông tin cá nhân</h4>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <label class="labels">Họ</label>
+                            @Html.EditorFor(model => model.first_name, new { htmlAttributes = new { @class = "form-control", type = "text", placeholder = "Họ" } })
+                            @Html.ValidationMessageFor(model => model.first_name, "", new { @class = "badge bg-danger" })
+                        </div>
+                        <div class="col-md-6">
+                            <label class="labels">Tên</label>
+                            @Html.EditorFor(model => model.last_name, new { htmlAttributes = new { @class = "form-control", type = "text", placeholder = "Tên" } })
+                            @Html.ValidationMessageFor(model => model.last_name, "", new { @class = "badge bg-danger" })
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-12 mb-3">
+                            <label class="labels">Số điện thoại</label>
+                            @Html.EditorFor(model => model.phone, new { htmlAttributes = new { @class = "form-control", type = "text", placeholder = "Số điện thoại" } })
+                            @Html.ValidationMessageFor(model => model.last_name, "", new { @class = "badge bg-danger" })
+                        </div>
+                        <div class="col-md-12">
+                            <label class="labels">Email</label>
+                            @Html.EditorFor(model => model.email, new { htmlAttributes = new { @class = "form-control", type = "text", placeholder = "Email" } })
+                            @Html.ValidationMessageFor(model => model.last_name, "", new { @class = "badge bg-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="mt-5 text-center">
+                            <button class="btn btn-primary" type="submit">Lưu thông tin</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

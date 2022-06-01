@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using System.Security.Cryptography;
+using System.IO;
 using Foozie_Web.Models;
 
 namespace Foozie_Web.Controllers
@@ -26,6 +27,13 @@ namespace Foozie_Web.Controllers
                 return View(orders);
             }
             return RedirectToAction("Login", "Authentication");
+        }
+
+        public ActionResult Chart()
+        {
+            db.Configuration.ProxyCreationEnabled = false;
+            List<ORDER> orders = db.ORDERs.ToList();
+            return Json(orders.Select(o => o.total), JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Order(string start, string end)
@@ -66,8 +74,6 @@ namespace Foozie_Web.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(oRDER).State = EntityState.Modified;
-                oRDER.date = DateTime.Now;
-                oRDER.status = "Payment";
                 db.SaveChanges();
                 return RedirectToAction("Order");
             }
@@ -94,8 +100,7 @@ namespace Foozie_Web.Controllers
             if (!String.IsNullOrEmpty(search))
             {
                 foods = foods.Where(f => f.name.ToLower().Contains(search.ToLower())).ToList();
-            }
-            if (!String.IsNullOrEmpty(type) && type != "ALL")
+            } else if (!String.IsNullOrEmpty(type) && type != "ALL")
             {
                 foods = foods.Where(f => f.FOOD_TYPE.code == type).ToList();
             }
@@ -110,10 +115,14 @@ namespace Foozie_Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddProduct([Bind(Include = "food_id,name,description,thumbnail,price,is_delete,type_id")] FOOD fOOD)
+        public ActionResult AddProduct(HttpPostedFileBase thumbnail,[Bind(Include = "food_id,name,description,thumbnail,price,is_delete,type_id")] FOOD fOOD)
         {
             if (ModelState.IsValid)
             {
+                var type = db.FOOD_TYPE.Find(fOOD.type_id);
+                string path = Server.MapPath($"~/Images/foods/{type.code}/");
+                thumbnail.SaveAs(path + Path.GetFileName(thumbnail.FileName));
+                fOOD.thumbnail = thumbnail.FileName.ToString();
                 fOOD.food_id = Guid.NewGuid();
                 db.FOODs.Add(fOOD);
                 db.SaveChanges();
@@ -185,6 +194,10 @@ namespace Foozie_Web.Controllers
             return View(users);
         }
 
+        public ActionResult AddUser()
+        {
+            return View();
+        }
         // POST: User/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.

@@ -8,7 +8,7 @@
 <h2>AddProduct</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm("AddProduct", "Admin", FormMethod.Post, new { enctype = "multipart/form-data"}))
 {
     @Html.AntiForgeryToken()
     
@@ -20,7 +20,7 @@
             @Html.LabelFor(model => model.name, "Name",htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col">
                 @Html.EditorFor(model => model.name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.name, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(model => model.name, "", new { @class = "badge bg-danger" })
             </div>
         </div>
 
@@ -28,15 +28,18 @@
             @Html.LabelFor(model => model.description, "Decription", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col">
                 @Html.EditorFor(model => model.description, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.description, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(model => model.description, "", new { @class = "badge bg-danger" })
             </div>
         </div>
 
         <div class="form-group mb-3">
             @Html.LabelFor(model => model.thumbnail, "Thumbnail", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col">
-                @Html.EditorFor(model => model.thumbnail, new { htmlAttributes = new { @class = "form-control", @type = "file", @id = "formFile" } })
-                @Html.ValidationMessageFor(model => model.thumbnail, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.thumbnail, new { htmlAttributes = new { @class = "form-control", @type = "file", @id = "thumbnail" } })
+                @*<div class="col-md-10">
+                    <input type="file" name="file" id="file" style="width: 100%;" />
+                </div>*@
+                @Html.ValidationMessageFor(model => model.thumbnail, "", new { @class = "badge bg-danger" })
             </div>
         </div>
 
@@ -44,7 +47,7 @@
             @Html.LabelFor(model => model.price, "Price",htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col">
                 @Html.EditorFor(model => model.price, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.price, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(model => model.price, "", new { @class = "badge bg-danger" })
             </div>
         </div>
 
@@ -52,7 +55,7 @@
             @Html.LabelFor(model => model.type_id, "Food Type", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col">
                 @Html.DropDownList("type_id", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.type_id, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(model => model.type_id, "", new { @class = "badge bg-danger" })
             </div>
         </div>
 
