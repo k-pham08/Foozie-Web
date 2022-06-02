@@ -29,11 +29,38 @@ namespace Foozie_Web.Controllers
             return RedirectToAction("Login", "Authentication");
         }
 
-        public ActionResult Chart()
+        public ActionResult ChartDate()
         {
             db.Configuration.ProxyCreationEnabled = false;
-            List<ORDER> orders = db.ORDERs.ToList();
-            return Json(orders.Select(o => o.total), JsonRequestBehavior.AllowGet);
+            List<ORDER> orders = db.ORDERs.OrderBy(o => o.date).Where(o => o.status != "Waiting").ToList();
+            var date = orders.Select(o => new { o.date.GetValueOrDefault().Year, o.date.GetValueOrDefault().Month, o.date.GetValueOrDefault().Day, o.total }).GroupBy(x => new
+            {
+                x.Year,
+                x.Month,
+                x.Day
+            }, (key, group) => new
+            {
+                date = $"{key.Day}/{key.Month}/{key.Year}"
+            }).ToList();
+            //orders.OrderByDescending(o => o.date).Select(o => o.date.GetValueOrDefault().ToString("dd/MM/yyyy"))
+            return Json(date, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult ChartData()
+        {
+            db.Configuration.ProxyCreationEnabled = false;
+            List<ORDER> orders = db.ORDERs.OrderBy(o => o.date).Where(o => o.status != "Waiting").ToList();
+            var data = orders.Select(o => new { o.date.GetValueOrDefault().Year, o.date.GetValueOrDefault().Month, o.date.GetValueOrDefault().Day, o.total }).GroupBy(x => new
+            {
+                x.Year,
+                x.Month,
+                x.Day
+            }, (key, group) => new
+            {
+                total = group.Sum(t => t.total)
+            }).ToList();
+            //orders.OrderByDescending(o => o.date).Select(o => o.total)
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Order(string start, string end)
@@ -174,9 +201,17 @@ namespace Foozie_Web.Controllers
             return RedirectToAction("Product", "Admin");
         }
 
-        public ActionResult User()
+        public ActionResult User(string search)
         {
             var users = db.USERs.Include(u => u.ORDERs).ToList();
+            if (!String.IsNullOrEmpty(search))
+            {
+                users = users.Where(f => f.username.ToLower().Contains(search.ToLower())
+                                    || f.first_name.ToLower().Contains(search.ToLower())
+                                    || f.last_name.ToLower().Contains(search.ToLower())
+                                    || f.email.ToLower().Contains(search.ToLower())
+                                    || f.phone.ToLower().Contains(search.ToLower())).ToList();
+            }
             return View(users);
         }
 

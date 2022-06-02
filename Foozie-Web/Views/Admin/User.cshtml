@@ -9,10 +9,19 @@
 
 <div class="table-responsive table-boderless">
     <div class="d-flex justify-content-between">
-        <input class="form-control w-25 m-1"
-               type="text"
-               placeholder="Search"
-               aria-label="Search" />
+        @using (Html.BeginForm())
+        {
+            <div class="d-flex">
+                <input class="form-control w-100 m-1"
+                       type="text"
+                       name="search"
+                       placeholder="Search"
+                       aria-label="Search" />
+                <button class="btn btn-outline-success m-1" type="submit">
+                    <img src="~/lib/bootstrap-icons/icons/search.svg" />
+                </button>
+            </div>
+        }
         @Html.ActionLink("Add", "AddUser", "Admin", new { @class = "btn btn-success m-1" })
     </div>
     <table class="table table-boderless table-hover">

@@ -24,28 +24,13 @@
 
 <script>
 
-    var chartData = []
     var ctx = document.getElementById('myChart')
     var myChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: [
-                'Sunday',
-                'Monday',
-                'Tuesday',
-                'Wednesday',
-                'Thursday',
-                'Friday',
-                'Saturday',
-                'Sunday',
-                'Sunday',
-                'Sunday',
-                'Sunday',
-                'Sunday',
-                'Sunday'    
-            ],
+            labels: [],
             datasets: [{
-                data: chartData,
+                data: [],
                 lineTension: 0,
                 backgroundColor: 'transparent',
                 borderColor: '#007bff',
@@ -68,22 +53,40 @@
     })
 
     async function getData() {
-        let res = await fetch('https://localhost:44316/Admin/Chart')
+        let res = await fetch('https://localhost:44316/Admin/ChartData')
         let data = await res.json()
         return data
     }
 
-    function updateData(chart) {
-        chart.data.labels.forEach((dataset) => {
-            dataset.data.push(50);
-        });
-        //chart.data.datasets[0].data[2] = 50;
+    async function getLabel() {
+        let res = await fetch('https://localhost:44316/Admin/ChartDate')
+        let label = await res.json()
+        return label
+    }
+
+    function updateData(chart, data) {
+        //chart.data.labels.forEach((dataset) => {
+        //    dataset.data.push(50);
+        //});
+        for (let i = 0; i < data.length; i++) {
+            chart.data.datasets[0].data[i] = data[i].total;
+        }
         chart.update();
     }
 
+    function addLabels(chart, labels) {
+        for (let i = 0; i < labels.length; i++) {
+            chart.data.labels[i] = labels[i].date;
+        }
+        chart.update();
+    }
+
+    getLabel()
+        .then(label => { addLabels(myChart, label) })
     getData()
-        .then(data => { chartData = data })
-        .then(updateData(myChart))
+        .then(data => { updateData(myChart, data) })
+
+        
 </script>
 
 
