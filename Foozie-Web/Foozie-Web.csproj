@@ -783,6 +783,10 @@
     <Content Include="Views\Admin\EditOrder.cshtml" />
     <Content Include="Views\Admin\UserDetails.cshtml" />
     <Content Include="Views\User\Edit.cshtml" />
+    <Content Include="Views\Admin\AddFoodType.cshtml" />
+    <Content Include="Views\Admin\EditFoodType.cshtml" />
+    <Content Include="Views\Admin\FoodOptions.cshtml" />
+    <Content Include="Views\Admin\FoodType.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

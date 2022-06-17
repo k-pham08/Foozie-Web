@@ -1,0 +1,56 @@
+﻿@model Foozie_Web.Models.FOOD_TYPE
+
+@{
+    ViewBag.Title = "AddFoodType";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>AddFoodType</h2>
+
+@using (Html.BeginForm("AddFoodType", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>FOOD_TYPE</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group mb-3">
+            @Html.LabelFor(model => model.name, "Name", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col">
+                @Html.EditorFor(model => model.name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.name, "", new { @class = "badge bg-danger" })
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            @Html.LabelFor(model => model.code, "Code", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col">
+                @Html.EditorFor(model => model.code, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.code, "", new { @class = "badge bg-danger" })
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            @Html.LabelFor(model => model.description, "Description", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col">
+                @Html.EditorFor(model => model.description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.description, "", new { @class = "badge bg-danger" })
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            @Html.LabelFor(model => model.thumbnail, "Thumbnail", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col">
+                @Html.EditorFor(model => model.thumbnail, new { htmlAttributes = new { @class = "form-control", @type = "file", @id = "thumbnail" } })
+                @Html.ValidationMessageFor(model => model.thumbnail, "", new { @class = "badge bg-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10 mt-2">
+                <input type="submit" value="Add" class="btn btn-success" />
+            </div>
+        </div>
+    </div>
+}

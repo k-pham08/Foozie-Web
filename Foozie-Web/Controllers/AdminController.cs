@@ -63,6 +63,8 @@ namespace Foozie_Web.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
+      
+
         public ActionResult Order(string start, string end)
         {
             var orders = db.ORDERs.Where(o => o.status != "Waiting");
@@ -119,6 +121,88 @@ namespace Foozie_Web.Controllers
             db.ORDERs.Remove(order);
             db.SaveChanges();
             return RedirectToAction("Order", "Admin");
+        }
+
+        public ActionResult FoodOptions()
+        {
+            var types = db.FOOD_TYPE.ToList();
+            return View(types);
+        }
+
+        public ActionResult FoodType()
+        {
+            var types = db.FOOD_TYPE.ToList();
+            return View(types);
+        }
+
+        public ActionResult AddFoodType()
+        {
+            return View();
+        }
+
+        // POST: FOOD_TYPE1/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddFoodType(HttpPostedFileBase thumbnail, [Bind(Include = "type_id,name,code,description,is_delete,thumbnail")] FOOD_TYPE fOOD_TYPE)
+        {
+            if (ModelState.IsValid)
+            {
+                string path = Server.MapPath($"~/Images/food_type/");
+                thumbnail.SaveAs(path + Path.GetFileName(thumbnail.FileName));
+                fOOD_TYPE.thumbnail = thumbnail.FileName.ToString();
+                fOOD_TYPE.type_id = Guid.NewGuid();
+                db.FOOD_TYPE.Add(fOOD_TYPE);
+                db.SaveChanges();
+                return RedirectToAction("FoodType");
+            }
+
+            return View(fOOD_TYPE);
+        }
+
+        public ActionResult EditFoodType(Guid? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            FOOD_TYPE fOOD_TYPE = db.FOOD_TYPE.Find(id);
+            if (fOOD_TYPE == null)
+            {
+                return HttpNotFound();
+            }
+            return View(fOOD_TYPE);
+        }
+
+        // POST: FOOD_TYPE/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditFoodType(HttpPostedFileBase thumbnail, [Bind(Include = "type_id,name,code,description,is_delete")] FOOD_TYPE fOOD_TYPE)
+        {
+            if (ModelState.IsValid)
+            {
+                var type = db.FOOD_TYPE.Find(fOOD_TYPE.type_id);
+                string fullPath = Server.MapPath("~/Images/food_type/" + type.thumbnail);
+                string path = Server.MapPath($"~/Images/food_type/");
+                if (System.IO.File.Exists(fullPath))
+                {
+                    System.IO.File.Delete(fullPath);
+                }
+                if (thumbnail.FileName != fOOD_TYPE.thumbnail)
+                {
+                    thumbnail.SaveAs(path + Path.GetFileName(thumbnail.FileName));
+                    type.thumbnail = thumbnail.FileName.ToString();
+                }
+                type.name = fOOD_TYPE.name;
+                type.code = fOOD_TYPE.code;
+                type.description = fOOD_TYPE.description;
+                db.SaveChanges();
+                return RedirectToAction("FoodType");
+            }
+            return View(fOOD_TYPE);
         }
 
         public ActionResult Product(string search, string type)
@@ -180,10 +264,22 @@ namespace Foozie_Web.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditProduct([Bind(Include = "food_id,name,description,thumbnail,price,is_delete,type_id")] FOOD fOOD)
+        public ActionResult EditProduct(HttpPostedFileBase thumbnail, [Bind(Include = "food_id,name,description,thumbnail,price,is_delete,type_id")] FOOD fOOD)
         {
             if (ModelState.IsValid)
             {
+                var food = db.FOODs.Find(fOOD.food_id);
+                string fullPath = Server.MapPath($"~/Images/foods/{food.FOOD_TYPE.code}/{food.thumbnail}");
+                string path = Server.MapPath($"~/Images/foods/{food.FOOD_TYPE.code}/");
+                if (System.IO.File.Exists(fullPath))
+                {
+                    System.IO.File.Delete(fullPath);
+                }
+                if (thumbnail.FileName != fOOD.thumbnail)
+                {
+                    thumbnail.SaveAs(path + Path.GetFileName(thumbnail.FileName));
+                    food.thumbnail = thumbnail.FileName.ToString();         
+                }
                 db.Entry(fOOD).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Product");

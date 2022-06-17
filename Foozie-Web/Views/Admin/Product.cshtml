@@ -6,32 +6,26 @@
 
 <h2>FOOD</h2>
 <div class="table-responsive">
+    
     <div class="d-flex justify-content-between">
+
         @using (Html.BeginForm("Product", "Admin"))
         {
-        <form>
-            <div class="d-flex">
-                <select class="form-select m-1" name="type" onchange="this.form.submit()">
-                    <option selected>Chọn loại món</option>
-                    <option value="ALL">Tất cả</option>
-                    <option value="RICE">Cơm</option>
-                    <option value="NOODLE">Mì</option>
-                    <option value="PHO">Phở</option>
-                    <option value="CHICKEN">Món gà</option>
-                    <option value="PIZZA">Pizza</option>
-                    <option value="SNACK">Đồ ăn nhẹ</option>
-                    <option value="VEGETARIAN_FOOD">Đồ ăn chay</option>
-                </select>
-                <input class="form-control m-1"
-                       type="text"
-                       name="search"
-                       placeholder="Search"
-                       aria-label="Search" />
-                <button class="btn btn-outline-success m-1" type="submit">
-                    <img src="~/lib/bootstrap-icons/icons/search.svg" />
-                </button>
-            </div>
-        </form>
+            <form>
+                <div class="d-flex">
+                    @{
+                        Html.RenderAction("FoodOptions", "Admin");
+                    }
+                    <input class="form-control m-1"
+                           type="text"
+                           name="search"
+                           placeholder="Search"
+                           aria-label="Search" />
+                    <button class="btn btn-outline-success m-1" type="submit">
+                        <img src="~/lib/bootstrap-icons/icons/search.svg" />
+                    </button>
+                </div>
+            </form>
         }
         @Html.ActionLink("Add", "AddProduct", "Admin", new { @class = "btn btn-success m-1" })
     </div>
@@ -51,14 +45,14 @@
             {
                 <tr>
                     <td style="width:10%">
-                        <img src="~/Images/foods/@food.FOOD_TYPE.code/@food.thumbnail" class="img-fluid"/>
+                        <img src="~/Images/foods/@food.FOOD_TYPE.code/@food.thumbnail" class="img-fluid" />
                     </td>
                     <td id="food-name">@food.name</td>
                     <td>@food.price</td>
                     <td>@food.FOOD_TYPE.name</td>
                     <td>@food.description</td>
                     <td></td>
-                    <td >
+                    <td>
                         <div class="d-flex flex-wrap wrap">
                             <button class="btn btn-primary" style="background: none; border: none" onclick="location.href = '/Admin/EditProduct/@food.food_id';">
                                 <img src="~/lib/bootstrap-icons/icons/pencil-fill.svg" />

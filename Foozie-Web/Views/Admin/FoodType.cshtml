@@ -1,0 +1,74 @@
+﻿@model IEnumerable<Foozie_Web.Models.FOOD_TYPE>
+
+@{
+    ViewBag.Title = "FoodType";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>FoodType</h2>
+<div class="table-responsive">
+    <div class="d-flex justify-content-between">
+        <div></div>
+        @Html.ActionLink("Add", "AddFoodType", "Admin", new { @class = "btn btn-success m-1" })
+    </div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Name</th>
+                <th scope="col">Code</th>
+                <th scope="col">Description</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var type in Model)
+            {
+                <tr>
+                    <td style="width:10%">
+                        <img src="~/Images/food_type/@type.thumbnail" class="img-fluid" />
+                    </td>
+                    <td id="food-name">@type.name</td>
+                    <td>@type.code</td>
+                    <td>@type.description</td>
+                    <td></td>
+                    <td>
+                        <div class="d-flex">
+                            <button class="btn btn-primary" style="background: none; border: none" onclick="location.href = '/Admin/EditFoodType/@type.type_id';">
+                                <img src="~/lib/bootstrap-icons/icons/pencil-fill.svg" />
+                            </button>
+                            <button style="background: none; border: none" class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#t-@type.type_id" aria-expanded="false" aria-controls="collapseExample">
+                                <img src="~/lib/bootstrap-icons/icons/caret-down-fill.svg" />
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="7">
+                        <div class="collapse" id="t-@type.type_id">
+                            <ul class="list-group mt-3">
+                                @if (type.FOODs.Count == 0)
+                                {
+                                    <li class="h6">Hiện chưa có món ăn nào</li>
+                                }
+                                else
+                                {
+                                    foreach (var food in type.FOODs)
+                                    {
+                                        <li class="list-group-item d-flex">
+                                            <img src="~/Images/foods/@food.FOOD_TYPE.code/@food.thumbnail" class="rounded me-3" style="width: 10%" />
+                                            <div class="w-100">
+                                                <h5>@food.name</h5>
+                                                <p>Số lượng: <span>@food.price</span></p>
+                                            </div>
+                                        </li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

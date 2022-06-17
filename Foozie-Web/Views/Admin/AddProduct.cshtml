@@ -36,9 +36,6 @@
             @Html.LabelFor(model => model.thumbnail, "Thumbnail", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col">
                 @Html.EditorFor(model => model.thumbnail, new { htmlAttributes = new { @class = "form-control", @type = "file", @id = "thumbnail" } })
-                @*<div class="col-md-10">
-                    <input type="file" name="file" id="file" style="width: 100%;" />
-                </div>*@
                 @Html.ValidationMessageFor(model => model.thumbnail, "", new { @class = "badge bg-danger" })
             </div>
         </div>

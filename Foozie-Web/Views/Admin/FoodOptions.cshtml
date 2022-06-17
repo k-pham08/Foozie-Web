@@ -1,0 +1,12 @@
+﻿@model IEnumerable<Foozie_Web.Models.FOOD_TYPE>
+@{ 
+    Layout = null;
+}
+<select class="form-select m-1" name="type" onchange="this.form.submit()">
+    <option selected>Chọn loại món</option>
+    <option value="ALL">Tất cả</option>
+    @foreach(var type in Model)
+    {
+        <option value=@type.code>@type.name</option>
+    }
+</select>
