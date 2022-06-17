@@ -1,0 +1,147 @@
+﻿@model List<Foozie_Web.Models.ORDER>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
+        integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"
+        integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha"
+        crossorigin="anonymous"></script>
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Dashboard</h1>
+</div>
+
+<div class="card ms-5 me-5 mt-3 mb-5 p-3 row shadow-lg rounded">
+    <p class="h3">Tổng doanh thu: @ViewBag.totalOrder<span>đ</span></p>
+</div>
+
+<div class="h4">Biểu đồ doanh thu theo ngày</div>
+<canvas class="my-4 w-100"
+        id="chartLine"
+        width="900"
+        height="380"></canvas>
+<div class="h4">Biểu đồ doanh thu theo tháng</div>
+<canvas class="my-4 w-100"
+        id="chartBar"
+        width="900"
+        height="380"></canvas>
+
+
+
+    <script>
+
+        var chartDay = document.getElementById('chartLine')
+        var chartMonth = document.getElementById('chartBar')
+        var month = ["January", "February", "March", "April", "May", "June", "July",
+            "August", "September", "October", "November", "December"]
+        var ChartLine = new Chart(chartDay, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    data: [],
+                    lineTension: 0,
+                    backgroundColor: 'transparent',
+                    borderColor: '#007bff',
+                    pointBackgroundColor: '#007bff'
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: false
+                        }
+                    }]
+                },
+                legend: {
+                    display: false
+                }
+            }
+        })
+
+        var ChartBar = new Chart(chartMonth, {
+            type: 'bar',
+            data: {
+                labels: month,
+                datasets: [{
+                    data: [0,0,0,0,0,0,0,0,0,0,0,0],
+                    lineTension: 0,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgb(54, 162, 235)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                },
+                legend: {
+                    display: false
+                }
+            }
+        })
+
+        async function getDataByDay() {
+            let res = await fetch('https://localhost:44316/Admin/ChartDataByDay')
+            let data = await res.json()
+            return data.slice(0, 7)
+        }
+
+        async function getDataByMonth() {
+            let res = await fetch('https://localhost:44316/Admin/ChartDataByMonth')
+            let data = await res.json()
+            return data
+        }
+
+        function updateData(chart, data) {
+            //chart.data.labels.forEach((dataset) => {
+            //    dataset.data.push(50);
+            //});
+            for (let i = 0; i < data.length; i++) {
+                chart.data.datasets[0].data[i] = data[i].total;
+            }
+            chart.update();
+        }
+
+        function addLabels(chart, labels) {
+            for (let i = 0; i < labels.length; i++) {
+                chart.data.labels[i] = labels[i].date;
+            }
+            chart.update();
+        }
+
+        function setDataByMonth(chart, data) {
+            for (let i = 0; i < data.length; i++) {
+                chart.data.datasets[0].data[data[i].month - 1] = data[i].total;
+            }
+            chart.update();
+        }
+            
+        getDataByDay()
+            .then(data => {
+                updateData(ChartLine, data)
+                addLabels(ChartLine, data)
+                console.log(data)
+            })
+
+        getDataByMonth()
+            .then(data => {
+                setDataByMonth(ChartBar, data)
+            })
+
+    </script>
+
+
+
+
+
+

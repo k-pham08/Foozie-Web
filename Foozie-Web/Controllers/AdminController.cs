@@ -29,24 +29,35 @@ namespace Foozie_Web.Controllers
             return RedirectToAction("Login", "Authentication");
         }
 
-        public ActionResult ChartDate()
+        public ActionResult Dashboard()
+        {
+            List<ORDER> orders = db.ORDERs.ToList();
+            var result = 0;
+            foreach(var order in orders)
+            {
+                result += order.total.GetValueOrDefault();
+            }
+            ViewBag.totalOrder = String.Format("{0:n0}", result);
+            return View(orders);
+        }
+
+        public ActionResult ChartDataByMonth()
         {
             db.Configuration.ProxyCreationEnabled = false;
             List<ORDER> orders = db.ORDERs.OrderBy(o => o.date).Where(o => o.status != "Waiting").ToList();
             var date = orders.Select(o => new { o.date.GetValueOrDefault().Year, o.date.GetValueOrDefault().Month, o.date.GetValueOrDefault().Day, o.total }).GroupBy(x => new
             {
-                x.Year,
                 x.Month,
-                x.Day
             }, (key, group) => new
             {
-                date = $"{key.Day}/{key.Month}/{key.Year}"
+                total = group.Sum(t => t.total),
+                month = $"{key.Month}"
             }).ToList();
             //orders.OrderByDescending(o => o.date).Select(o => o.date.GetValueOrDefault().ToString("dd/MM/yyyy"))
             return Json(date, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult ChartData()
+        public ActionResult ChartDataByDay()
         {
             db.Configuration.ProxyCreationEnabled = false;
             List<ORDER> orders = db.ORDERs.OrderBy(o => o.date).Where(o => o.status != "Waiting").ToList();
@@ -57,7 +68,8 @@ namespace Foozie_Web.Controllers
                 x.Day
             }, (key, group) => new
             {
-                total = group.Sum(t => t.total)
+                total = group.Sum(t => t.total),
+                date = $"{key.Day}/{key.Month}/{key.Year}"
             }).ToList();
             //orders.OrderByDescending(o => o.date).Select(o => o.total)
             return Json(data, JsonRequestBehavior.AllowGet);

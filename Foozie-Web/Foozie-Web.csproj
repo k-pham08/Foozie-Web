@@ -787,6 +787,7 @@
     <Content Include="Views\Admin\EditFoodType.cshtml" />
     <Content Include="Views\Admin\FoodOptions.cshtml" />
     <Content Include="Views\Admin\FoodType.cshtml" />
+    <Content Include="Views\Admin\Dashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

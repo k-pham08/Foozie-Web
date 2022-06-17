@@ -100,7 +100,7 @@ namespace Foozie_Web.Controllers
                         adminCookie.Value = data.FirstOrDefault().username;
                         adminCookie.Expires = DateTime.Now.AddDays(1);
                         Response.Cookies.Add(adminCookie);
-                        return RedirectToAction("Index", "Admin");
+                        return RedirectToAction("Dashboard", "Admin");
                     }
                 }
                 else
