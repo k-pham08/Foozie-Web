@@ -25,11 +25,10 @@ namespace Foozie_Web.Models
         [Required(ErrorMessage = "Không được bỏ trống")]
         public string name { get; set; }
         public string description { get; set; }
-        [Required(ErrorMessage = "Không được bỏ trống")]
         public string thumbnail { get; set; }
         [Required(ErrorMessage = "Không được bỏ trống")]
         [Range(1000, Int64.MaxValue, ErrorMessage = "Giá tối thiểu là 1000đ")]
-        public Nullable<int> price { get; set; }
+        public int price { get; set; }
         public Nullable<bool> is_delete { get; set; }
         public System.Guid type_id { get; set; }
     

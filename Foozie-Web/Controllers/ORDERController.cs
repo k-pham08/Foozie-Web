@@ -17,7 +17,8 @@ namespace Foozie_Web.Controllers
         // GET: ORDER
         public ActionResult Index()
         {
-            var oRDERs = db.ORDERs.Include(o => o.USER);
+            var user = db.USERs.Find(Session["idUser"]);
+            var oRDERs = db.ORDERs.Include(o => o.USER).Where(o => o.user_id == user.user_id);
             return View(oRDERs.ToList());
         }
 

@@ -29,7 +29,7 @@ namespace Foozie_Web.Controllers
             }
 
             FOOD_TYPE fOOD_TYPE = db.FOOD_TYPE.Find(id);
-            List<FOOD> foodList = db.FOODs.Where(f => f.type_id.CompareTo(fOOD_TYPE.type_id) == 0).ToList();
+            List<FOOD> foodList = db.FOODs.Where(f => f.type_id.CompareTo(fOOD_TYPE.type_id) == 0 && f.is_delete == true).ToList();
 
             if (!String.IsNullOrEmpty(search))
             {

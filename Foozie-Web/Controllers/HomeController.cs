@@ -20,16 +20,20 @@ namespace Foozie_Web.Controllers
 
         public ActionResult Index([Bind(Include = "order_id,date,status,address,user_id")] ORDER oRDER)
         {
-            var order = db.ORDERs.Any(o => o.status == "Waiting");
-            if (!order && Session["idUser"] != null)
+            if(Session["idUser"] != null)
             {
-                oRDER.order_id = Guid.NewGuid();
-                oRDER.user_id = new Guid(Session["idUser"].ToString());
-                oRDER.date = DateTime.Parse("01/01/2000");
-                oRDER.status = "Waiting";
-                oRDER.total = 0;
-                db.ORDERs.Add(oRDER);
-                db.SaveChanges();
+                var user = db.USERs.Find(Session["idUser"]);
+                var order = db.ORDERs.Any(o => o.status == "Waiting" && o.user_id == user.user_id);
+                if (!order)
+                {
+                    oRDER.order_id = Guid.NewGuid();
+                    oRDER.user_id = new Guid(Session["idUser"].ToString());
+                    oRDER.date = DateTime.Parse("01/01/2000");
+                    oRDER.status = "Waiting";
+                    oRDER.total = 0;
+                    db.ORDERs.Add(oRDER);
+                    db.SaveChanges();
+                }
             }
             return View(db.FOOD_TYPE.ToList());
         }

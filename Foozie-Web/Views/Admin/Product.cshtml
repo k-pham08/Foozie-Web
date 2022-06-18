@@ -36,6 +36,7 @@
                 <th scope="col">Name</th>
                 <th scope="col">Price</th>
                 <th scope="col">Type</th>
+                <th scope="col">Serve</th>
                 <th scope="col">Description</th>
                 <th scope="col"></th>
             </tr>
@@ -43,32 +44,64 @@
         <tbody>
             @foreach (var food in Model)
             {
-                <tr>
-                    <td style="width:10%">
-                        <img src="~/Images/foods/@food.FOOD_TYPE.code/@food.thumbnail" class="img-fluid" />
-                    </td>
-                    <td id="food-name">@food.name</td>
-                    <td>@food.price</td>
-                    <td>@food.FOOD_TYPE.name</td>
-                    <td>@food.description</td>
-                    <td></td>
-                    <td>
-                        <div class="d-flex flex-wrap wrap">
-                            <button class="btn btn-primary" style="background: none; border: none" onclick="location.href = '/Admin/EditProduct/@food.food_id';">
-                                <img src="~/lib/bootstrap-icons/icons/pencil-fill.svg" />
-                            </button>
-
-                            @using (Html.BeginForm("DeleteFood", "Admin", new { foodId = food.food_id }, FormMethod.Post))
-                            {
-                                @Html.HttpMethodOverride(HttpVerbs.Delete)
-
-                                <button class="btn btn-primary" type="submit" style="background: none; border: none" id="">
-                                    <img src="~/lib/bootstrap-icons/icons/trash-fill.svg" />
+                if (food.is_delete == true)
+                {
+                    <tr class="bg-success p-2 text-dark bg-opacity-25">
+                        <td style="width:10%">
+                            <img src="~/Images/foods/@food.FOOD_TYPE.code/@food.thumbnail" class="img-fluid" />
+                        </td>
+                        <td id="food-name">@food.name</td>
+                        <td>@food.price</td>
+                        <td>@food.FOOD_TYPE.name</td>
+                        <td>@food.is_delete</td>
+                        <td>@food.description</td>
+                        <td></td>
+                        <td>
+                            <div class="d-flex flex-wrap wrap">
+                                <button class="btn btn-primary" style="background: none; border: none" onclick="location.href = '/Admin/EditProduct/@food.food_id';">
+                                    <img src="~/lib/bootstrap-icons/icons/pencil-fill.svg" />
                                 </button>
-                            }
-                        </div>
-                    </td>
-                </tr>
+
+                                @using (Html.BeginForm("DeleteFood", "Admin", new { foodId = food.food_id }, FormMethod.Post))
+                                {
+                                    @Html.HttpMethodOverride(HttpVerbs.Delete)
+
+                                    <button class="btn btn-primary" type="submit" style="background: none; border: none" id="">
+                                        <img src="~/lib/bootstrap-icons/icons/trash-fill.svg" />
+                                    </button>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                } else { 
+                    <tr class="bg-danger p-2 text-dark bg-opacity-25">
+                        <td style="width:10%">
+                            <img src="~/Images/foods/@food.FOOD_TYPE.code/@food.thumbnail" class="img-fluid" />
+                        </td>
+                        <td id="food-name">@food.name</td>
+                        <td>@food.price</td>
+                        <td>@food.FOOD_TYPE.name</td>
+                        <td>@food.is_delete</td>
+                        <td>@food.description</td>
+                        <td></td>
+                        <td>
+                            <div class="d-flex flex-wrap wrap">
+                                <button class="btn btn-primary" style="background: none; border: none" onclick="location.href = '/Admin/EditProduct/@food.food_id';">
+                                    <img src="~/lib/bootstrap-icons/icons/pencil-fill.svg" />
+                                </button>
+
+                                @using (Html.BeginForm("DeleteFood", "Admin", new { foodId = food.food_id }, FormMethod.Post))
+                                {
+                                    @Html.HttpMethodOverride(HttpVerbs.Delete)
+
+                                    <button class="btn btn-primary" type="submit" style="background: none; border: none" id="">
+                                        <img src="~/lib/bootstrap-icons/icons/trash-fill.svg" />
+                                    </button>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
             }
         </tbody>
     </table>

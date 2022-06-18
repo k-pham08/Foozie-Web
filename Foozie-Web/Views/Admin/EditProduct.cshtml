@@ -37,7 +37,7 @@
     <div class="form-group mb-3">
         @Html.LabelFor(model => model.thumbnail, "Thumbnail", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col">
-            @Html.EditorFor(model => model.thumbnail, new { htmlAttributes = new { @class = "form-control", @type = "file", @id = "formFile" } })
+            @Html.EditorFor(model => model.thumbnail, new { htmlAttributes = new { @class = "form-control", @type = "file", @id = "formFile", @accept = "image/png, image/jpg, image/jpeg, image/gif" } })
             @Html.ValidationMessageFor(model => model.thumbnail, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -47,6 +47,14 @@
         <div class="col">
             @Html.EditorFor(model => model.price, new { htmlAttributes = new { @class = "form-control" } })
             @Html.ValidationMessageFor(model => model.price, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group mb-3">
+        @Html.LabelFor(model => model.is_delete, "Serve", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col">
+            @Html.EditorFor(model => model.is_delete, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.is_delete, "", new { @class = "text-danger" })
         </div>
     </div>
 

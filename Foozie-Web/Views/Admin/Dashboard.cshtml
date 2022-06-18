@@ -128,9 +128,8 @@
             
         getDataByDay()
             .then(data => {
-                updateData(ChartLine, data)
+                updateData(ChartLine, data.reverse())
                 addLabels(ChartLine, data)
-                console.log(data)
             })
 
         getDataByMonth()

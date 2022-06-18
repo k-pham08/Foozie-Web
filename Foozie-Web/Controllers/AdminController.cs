@@ -60,7 +60,7 @@ namespace Foozie_Web.Controllers
         public ActionResult ChartDataByDay()
         {
             db.Configuration.ProxyCreationEnabled = false;
-            List<ORDER> orders = db.ORDERs.OrderBy(o => o.date).Where(o => o.status != "Waiting").ToList();
+            List<ORDER> orders = db.ORDERs.OrderByDescending(o => o.date).Where(o => o.status != "Waiting").ToList();
             var data = orders.Select(o => new { o.date.GetValueOrDefault().Year, o.date.GetValueOrDefault().Month, o.date.GetValueOrDefault().Day, o.total }).GroupBy(x => new
             {
                 x.Year,
@@ -79,7 +79,7 @@ namespace Foozie_Web.Controllers
 
         public ActionResult Order(string start, string end)
         {
-            var orders = db.ORDERs.Where(o => o.status != "Waiting");
+            var orders = db.ORDERs.OrderByDescending(o => o.date).Where(o => o.status != "Waiting");
 
             if (!String.IsNullOrEmpty(start) && !String.IsNullOrEmpty(end))
             {
@@ -197,16 +197,19 @@ namespace Foozie_Web.Controllers
             if (ModelState.IsValid)
             {
                 var type = db.FOOD_TYPE.Find(fOOD_TYPE.type_id);
-                string fullPath = Server.MapPath("~/Images/food_type/" + type.thumbnail);
-                string path = Server.MapPath($"~/Images/food_type/");
-                if (System.IO.File.Exists(fullPath))
+                if(thumbnail != null)
                 {
-                    System.IO.File.Delete(fullPath);
-                }
-                if (thumbnail.FileName != fOOD_TYPE.thumbnail)
-                {
-                    thumbnail.SaveAs(path + Path.GetFileName(thumbnail.FileName));
-                    type.thumbnail = thumbnail.FileName.ToString();
+                    string fullPath = Server.MapPath("~/Images/food_type/" + type.thumbnail);
+                    string path = Server.MapPath($"~/Images/food_type/");
+                    if (System.IO.File.Exists(fullPath))
+                    {
+                        System.IO.File.Delete(fullPath);
+                    }
+                    if (thumbnail.FileName != fOOD_TYPE.thumbnail)
+                    {
+                        thumbnail.SaveAs(path + Path.GetFileName(thumbnail.FileName));
+                        type.thumbnail = thumbnail.FileName.ToString();
+                    }
                 }
                 type.name = fOOD_TYPE.name;
                 type.code = fOOD_TYPE.code;
@@ -243,10 +246,14 @@ namespace Foozie_Web.Controllers
             if (ModelState.IsValid)
             {
                 var type = db.FOOD_TYPE.Find(fOOD.type_id);
-                string path = Server.MapPath($"~/Images/foods/{type.code}/");
-                thumbnail.SaveAs(path + Path.GetFileName(thumbnail.FileName));
-                fOOD.thumbnail = thumbnail.FileName.ToString();
+                if(thumbnail != null)
+                {
+                    string path = Server.MapPath($"~/Images/foods/{type.code}/");
+                    thumbnail.SaveAs(path + Path.GetFileName(thumbnail.FileName));
+                    fOOD.thumbnail = thumbnail.FileName.ToString();
+                }
                 fOOD.food_id = Guid.NewGuid();
+                fOOD.is_delete = true;
                 db.FOODs.Add(fOOD);
                 db.SaveChanges();
                 return RedirectToAction("Product");
@@ -281,18 +288,25 @@ namespace Foozie_Web.Controllers
             if (ModelState.IsValid)
             {
                 var food = db.FOODs.Find(fOOD.food_id);
-                string fullPath = Server.MapPath($"~/Images/foods/{food.FOOD_TYPE.code}/{food.thumbnail}");
-                string path = Server.MapPath($"~/Images/foods/{food.FOOD_TYPE.code}/");
-                if (System.IO.File.Exists(fullPath))
+                if(thumbnail != null)
                 {
-                    System.IO.File.Delete(fullPath);
+                    string fullPath = Server.MapPath($"~/Images/foods/{food.FOOD_TYPE.code}/{food.thumbnail}");
+                    string path = Server.MapPath($"~/Images/foods/{food.FOOD_TYPE.code}/");
+                    if (System.IO.File.Exists(fullPath))
+                    {
+                        System.IO.File.Delete(fullPath);
+                    }
+                    if (thumbnail.FileName != fOOD.thumbnail)
+                    {
+                        thumbnail.SaveAs(path + Path.GetFileName(thumbnail.FileName));
+                        food.thumbnail = thumbnail.FileName.ToString();
+                    }
                 }
-                if (thumbnail.FileName != fOOD.thumbnail)
-                {
-                    thumbnail.SaveAs(path + Path.GetFileName(thumbnail.FileName));
-                    food.thumbnail = thumbnail.FileName.ToString();         
-                }
-                db.Entry(fOOD).State = EntityState.Modified;
+                food.name = fOOD.name;
+                food.description = fOOD.description;
+                food.price = fOOD.price;
+                food.is_delete = fOOD.is_delete;
+                food.type_id = fOOD.type_id;
                 db.SaveChanges();
                 return RedirectToAction("Product");
             }
@@ -351,6 +365,7 @@ namespace Foozie_Web.Controllers
             if (ModelState.IsValid)
             {
                 uSER.user_id = Guid.NewGuid();
+                uSER.password = GetMD5(uSER.password);
                 db.USERs.Add(uSER);
                 db.SaveChanges();
                 return RedirectToAction("User");
@@ -382,6 +397,7 @@ namespace Foozie_Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                uSER.password = GetMD5(uSER.password);
                 db.Entry(uSER).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("User");
@@ -406,5 +422,20 @@ namespace Foozie_Web.Controllers
             return RedirectToAction("User", "Admin");
         }
 
+        public static string GetMD5(string str)
+        {
+            MD5 md5 = new MD5CryptoServiceProvider();
+            byte[] fromData = Encoding.UTF8.GetBytes(str);
+            byte[] targetData = md5.ComputeHash(fromData);
+            string byteToString = null;
+
+            for (int i = 0; i < targetData.Length; i++)
+            {
+                byteToString += targetData[i].ToString("x2");
+
+            }
+            return byteToString;
+
+        }
     }
 }
