@@ -40,28 +40,34 @@ namespace Foozie_Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Details(Guid id, string note, int quantity, ORDER_DETAIL oRDER_DETAIL)
         {
-            if (ModelState.IsValid)
+            if(Session["idUser"] != null)
             {
-                Guid cur_user = new Guid(Session["idUser"].ToString());
-                var data = db.ORDERs.Where(o => o.status == "Waiting" && o.user_id.Equals(cur_user)).Select(o => o.order_id).ToList();
-                //var order = db.ORDERs.Include(o => o.status);
-                var orderDetail = db.ORDER_DETAIL.Where(model => model.food_id == id && model.order_id == data.FirstOrDefault()).ToList();
+                if (ModelState.IsValid)
+                {
+                    Guid cur_user = new Guid(Session["idUser"].ToString());
+                    var data = db.ORDERs.Where(o => o.status == "Waiting" && o.user_id.Equals(cur_user)).Select(o => o.order_id).ToList();
+                    //var order = db.ORDERs.Include(o => o.status);
+                    var orderDetail = db.ORDER_DETAIL.Where(model => model.food_id == id && model.order_id == data.FirstOrDefault()).ToList();
 
-                if (orderDetail.Count != 0)
-                {
-                    orderDetail.FirstOrDefault().quantity += quantity;
+                    if (orderDetail.Count != 0)
+                    {
+                        orderDetail.FirstOrDefault().quantity += quantity;
+                    }
+                    else
+                    {
+                        oRDER_DETAIL.order_id = data.First();
+                        oRDER_DETAIL.food_id = id;
+                        oRDER_DETAIL.quantity = quantity;
+                        oRDER_DETAIL.note = note;
+                        db.ORDER_DETAIL.Add(oRDER_DETAIL);
+                    }
+                    db.SaveChanges();
+                    ViewBag.success = "Thêm thành công";
+                    return RedirectToAction("Details", "Order");
                 }
-                else
-                {
-                    oRDER_DETAIL.order_id = data.First();
-                    oRDER_DETAIL.food_id = id;
-                    oRDER_DETAIL.quantity = quantity;
-                    oRDER_DETAIL.note = note;
-                    db.ORDER_DETAIL.Add(oRDER_DETAIL);
-            }
-            db.SaveChanges();
-                ViewBag.success = "Thêm thành công";
-                return RedirectToAction("Details", "Order");
+            } else
+            {
+                return RedirectToAction("Login", "Authentication");
             }
 
             ViewBag.food_id = new SelectList(db.FOODs, "food_id", "name", oRDER_DETAIL.food_id);
