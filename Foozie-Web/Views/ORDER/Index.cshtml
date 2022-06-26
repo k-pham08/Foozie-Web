@@ -12,35 +12,50 @@
 {
     if (item.status != "Waiting")
     {
-        <div class="card ms-5 me-5 mt-3 p-3 row shadow-lg rounded">
-            <div class="d-flex justify-content-between">
-                <h5>@item.address</h5>
-                @if (item.status == "DONE")
-                {
-                    <h6 class="text-success">Đã giao</h6>
-                }
-                else
-                {
-                    <h6 class="text-danger">Đang giao đến...</h6>
-                }
+<div class="card ms-5 me-5 mt-3 p-3 row shadow-lg rounded">
+    <div class="d-flex justify-content-between">
+        <h5>@item.address</h5>
+        @if (item.status == "DONE")
+        {
+            <h6 class="text-success">Đã giao</h6>
+        }
+        else
+        {
+            <h6 class="text-danger">Đang giao đến...</h6>
+        }
 
+    </div>
+    <ul class="list-group mt-3">
+        @foreach (var detail in item.ORDER_DETAIL)
+        {
+            <li class="list-group-item d-flex">
+                <img src="~/Images/foods/@detail.FOOD.FOOD_TYPE.code/@detail.FOOD.thumbnail" class="rounded me-3" style="width: 10%" />
+                <div class="w-100">
+                    <h5>@detail.FOOD.name</h5>
+                    <p class="">@detail.FOOD.FOOD_TYPE.name</p>
+                    <p>Số lượng: <span>@detail.quantity</span></p>
+                </div>
+                <div class="flex-shrink-1 m-auto" style="color: red"><span>@detail.FOOD.price</span>đ</div>
+            </li>
+        }
+    </ul>
+    @if (item.voucher_id != null)
+    {
+        <h5 class="mt-3">Voucher sử dụng</h5>
+        <div class="p-3 row rounded">
+            <div class="d-flex justify-content-between">
+                <img src="https://static.vecteezy.com/system/resources/previews/000/351/305/large_2x/voucher-vector-icon.jpg" class="rounded me-3" style="width: 10%" />
+                <div class="w-100">
+                    <h5>@item.VOUCHER.name</h5>
+                    <p class="">@item.VOUCHER.description</p>
+                    <p>Ngày hết hạn: <span>@item.VOUCHER.expired.GetValueOrDefault().ToString("dd-MM-yyyy")</span></p>
+                    <div class="">Còn lại: <span>@{var remain = item.VOUCHER.max_used - item.VOUCHER.used;} @remain</span></div>
+                </div>
             </div>
-            <ul class="list-group mt-3">
-                @foreach (var detail in item.ORDER_DETAIL)
-                {
-                    <li class="list-group-item d-flex">
-                        <img src="~/Images/foods/@detail.FOOD.FOOD_TYPE.code/@detail.FOOD.thumbnail" class="rounded me-3" style="width: 10%" />
-                        <div class="w-100">
-                            <h5>@detail.FOOD.name</h5>
-                            <p class="">@detail.FOOD.FOOD_TYPE.name</p>
-                            <p>Số lượng: <span>@detail.quantity</span></p>
-                        </div>
-                        <div class="flex-shrink-1 m-auto" style="color: red"><span>@detail.FOOD.price</span>đ</div>
-                    </li>
-                }
-            </ul>
-            <div class="total mt-3">Tổng số tiền: <span style="font-weight: 700; font-size: 24px; color: red">@item.total</span>đ</div>
         </div>
+    }
+    <div class="total mt-3">Tổng số tiền: <span style="font-weight: 700; font-size: 24px; color: red">@item.total</span>đ</div>
+</div>
     }
 }
 

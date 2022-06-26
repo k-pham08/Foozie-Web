@@ -12,6 +12,7 @@
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(model => model.user_id)
+    @Html.HiddenFor(model => model.voucher_id)
     
 <div class="form-horizontal">
     <h4>ORDER</h4>

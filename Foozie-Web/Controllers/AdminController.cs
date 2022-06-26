@@ -128,7 +128,7 @@ namespace Foozie_Web.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditOrder([Bind(Include = "order_id,date,status,address,total,user_id")] ORDER oRDER)
+        public ActionResult EditOrder([Bind(Include = "order_id,date,status,address,total,voucher_id,user_id")] ORDER oRDER)
         {
             if (ModelState.IsValid)
             {
