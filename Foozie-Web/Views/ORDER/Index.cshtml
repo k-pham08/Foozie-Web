@@ -13,8 +13,17 @@
     if (item.status != "Waiting")
     {
         <div class="card ms-5 me-5 mt-3 p-3 row shadow-lg rounded">
-            <div class="row align-items-start">
-                <h5 class="col">@item.address</h5>
+            <div class="d-flex justify-content-between">
+                <h5>@item.address</h5>
+                @if (item.status == "DONE")
+                {
+                    <h6 class="text-success">Đã giao</h6>
+                }
+                else
+                {
+                    <h6 class="text-danger">Đang giao đến...</h6>
+                }
+
             </div>
             <ul class="list-group mt-3">
                 @foreach (var detail in item.ORDER_DETAIL)

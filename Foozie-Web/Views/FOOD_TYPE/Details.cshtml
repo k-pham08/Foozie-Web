@@ -33,7 +33,7 @@
                     @Html.DisplayFor(modelItem => item.FOOD_TYPE.name)
                 </p>
                 <p class="text-black">
-                    <span>@item.price</span>đ
+                    <span>@String.Format("{0:n0}", item.price)</span>đ
                 </p>
                 <p class="btn btn-outline-success">Đặt ngay</p>
             </div>

@@ -13,9 +13,17 @@ namespace Foozie_Web.Controllers
 
         public ActionResult RenderBadge()
         {
-            List<ORDER_DETAIL> details = db.ORDER_DETAIL.ToList();
+            var cur_user = db.USERs.Find(Session["idUser"]);
+            ORDER order = db.ORDERs.Where(o => o.user_id == cur_user.user_id && o.status == "Waiting").First();
+            List<ORDER_DETAIL> details = db.ORDER_DETAIL.Where(d => d.order_id == order.order_id).ToList();
             ViewBag.Qty = details.Count;
             return PartialView("RenderBadge");
+        }
+
+        public ActionResult RenderVoucher()
+        {
+            List<VOUCHER> vouchers = db.VOUCHERs.ToList();
+            return View(vouchers);
         }
 
         public ActionResult Index([Bind(Include = "order_id,date,status,address,user_id")] ORDER oRDER)

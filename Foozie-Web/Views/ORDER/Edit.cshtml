@@ -42,16 +42,24 @@
     <div class="form-group mt-3">
         @Html.LabelFor(model => model.date, "Ngày đặt", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="">
-            @Html.EditorFor(model => model.date, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
-            @Html.ValidationMessageFor(model => model.date, "", new { @class = "text-danger" })
+            <input class="form-control" readonly value="@DateTime.Now.ToString("dd-MM-yyyy HH:mm")" />
         </div>
     </div>
 
     <div class="form-group mt-3">
         @Html.LabelFor(model => model.address, "Địa chỉ", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="">
-            @Html.EditorFor(model => model.address, new { htmlAttributes = new { @class = "form-control", @required = true} })
+            @Html.EditorFor(model => model.address, new { htmlAttributes = new { @class = "form-control", @required = true } })
             @Html.ValidationMessageFor(model => model.address, "", new { @class = "badge bg-danger" })
+        </div>
+    </div>
+
+    <div class="form-group mt-3">
+        @Html.LabelFor(model => model.voucher_id, "Voucher", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="">
+            @{
+                Html.RenderAction("RenderVoucher", "Home");
+            }
         </div>
     </div>
 
@@ -63,9 +71,10 @@
         </div>
     </div>
 
+    
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Xác nhận" class="btn btn-success mt-3" />
+            <button class="btn btn-success mt-3" onclick=test()>Xác nhận</button>
         </div>
     </div>
 </div>
@@ -76,11 +85,27 @@
     var total = 0;
     var price = document.querySelectorAll(".price")
     var quantity = document.querySelectorAll(".quantity")
+    var vouchers = document.querySelectorAll(".form-select option")
 
     for (let i = 0; i < price.length; i++) {
         total += parseInt(price[i].textContent) * parseInt(quantity[i].textContent);
     }
 
+    for (let i = 0; i < vouchers.length; i++) {
+        if (total < vouchers[i].className) {
+            vouchers[i].setAttribute("style", "display: none")
+        }
+    }
+
     document.querySelector(".total").value = total
+
+    function change(price) {
+        document.querySelector(".total").value = total - price.value
+    }
+
+    function test() {
+        var option = document.querySelector('option:checked')
+        option.value = option.id
+    }
 
 </script>

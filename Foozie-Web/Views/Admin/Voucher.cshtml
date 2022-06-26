@@ -1,0 +1,101 @@
+﻿@model IEnumerable<Foozie_Web.Models.VOUCHER>
+
+@{
+    ViewBag.Title = "Voucher";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Voucher</h2>
+
+<div class="d-flex justify-content-between">
+    @using (Html.BeginForm())
+    {
+        <div class="d-flex">
+            <input class="form-control w-100 m-1"
+                   type="text"
+                   name="search"
+                   placeholder="Search"
+                   aria-label="Search" />
+            <button class="btn btn-outline-success m-1" type="submit">
+                <img src="~/lib/bootstrap-icons/icons/search.svg" />
+            </button>
+        </div>
+    }
+    @Html.ActionLink("Add", "AddVoucher", "Admin", new { @class = "btn btn-success m-1" })
+</div>
+<table class="table table-boderless table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Max Used</th>
+            <th scope="col">Used</th>
+            <th scope="col">Expired</th>
+            <th scope="col">Reduced Price</th>
+            <th scope="col">Order Price</th>
+            <th scope="col">Code</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var voucher in Model)
+        {
+            if (voucher.used < voucher.max_used && voucher.expired > DateTime.Now)
+            {
+                <tr class="bg-success p-2 text-dark bg-opacity-25">
+                    <td>@voucher.name</td>
+                    <td>@voucher.description</td>
+                    <td>@String.Format("{0:n0}", voucher.max_used)</td>
+                    <td>@String.Format("{0:n0}", voucher.used)</td>
+                    <td>@voucher.expired.GetValueOrDefault().ToString("dd-MM-yyyy")</td>
+                    <td>@String.Format("{0:n0}", voucher.reduced_price)</td>
+                    <td>@String.Format("{0:n0}", voucher.order_price)</td>
+                    <td>@voucher.code</td>
+                    <td></td>
+                    <td class="d-flex flex-wrap wrap">
+                        <button class="btn btn-primary" style="background: none; border: none" onclick="location.href = '/Admin/EditVoucher/@voucher.voucher_id';">
+                            <img src="~/lib/bootstrap-icons/icons/pencil-fill.svg" />
+                        </button>
+
+                        @using (Html.BeginForm("DeleteVoucher", "Admin", new { voucherId = voucher.voucher_id }, FormMethod.Post))
+                        {
+                            @Html.HttpMethodOverride(HttpVerbs.Delete)
+
+                            <button class="btn btn-primary" type="submit" style="background: none; border: none" id="">
+                                <img src="~/lib/bootstrap-icons/icons/trash-fill.svg" />
+                            </button>
+                        }
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <tr class="bg-danger p-2 text-dark bg-opacity-25">
+                    <td>@voucher.name</td>
+                    <td>@voucher.description</td>
+                    <td>@String.Format("{0:n0}", voucher.max_used)</td>
+                    <td>@String.Format("{0:n0}", voucher.used)</td>
+                    <td>@voucher.expired.GetValueOrDefault().ToString("dd-MM-yyyy")</td>
+                    <td>@String.Format("{0:n0}", voucher.reduced_price)</td>
+                    <td>@String.Format("{0:n0}", voucher.order_price)</td>
+                    <td>@voucher.code</td>
+                    <td></td>
+                    <td class="d-flex flex-wrap wrap">
+                        <button class="btn btn-primary" style="background: none; border: none" onclick="location.href = '/Admin/EditVoucher/@voucher.voucher_id';">
+                            <img src="~/lib/bootstrap-icons/icons/pencil-fill.svg" />
+                        </button>
+
+                        @using (Html.BeginForm("DeleteVoucher", "Admin", new { voucherId = voucher.voucher_id }, FormMethod.Post))
+                        {
+                            @Html.HttpMethodOverride(HttpVerbs.Delete)
+
+                            <button class="btn btn-primary" type="submit" style="background: none; border: none" id="">
+                                <img src="~/lib/bootstrap-icons/icons/trash-fill.svg" />
+                            </button>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

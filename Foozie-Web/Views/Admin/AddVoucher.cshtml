@@ -1,0 +1,98 @@
+﻿@model Foozie_Web.Models.VOUCHER
+
+@{
+    ViewBag.Title = "AddVoucher";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>AddVoucher</h2>
+
+@using (Html.BeginForm("AddVoucher", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    
+<div class="form-horizontal">
+    <h4>VOUCHER</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="form-group mb-2">
+        @Html.LabelFor(model => model.max_used, "Max Used", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col">
+            @Html.EditorFor(model => model.max_used, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.max_used, "", new { @class = "badge bg-danger" })
+        </div>
+    </div>
+
+    <div class="form-group mb-2">
+        @Html.LabelFor(model => model.expired, "Expired", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col">
+            <input type="date" name="expired" class="form-control datepicker" />
+            @Html.ValidationMessageFor(model => model.expired, "", new { @class = "badge bg-danger" })
+        </div>
+    </div>
+
+    <div class="form-group mb-2">
+        @Html.LabelFor(model => model.reduced_price, "Reduced Price", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col">
+            @Html.EditorFor(model => model.reduced_price, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.reduced_price, "", new { @class = "badge bg-danger" })
+        </div>
+    </div>
+
+    <div class="form-group mb-2">
+        @Html.LabelFor(model => model.order_price, "Order Price", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col">
+            @Html.EditorFor(model => model.order_price, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.order_price, "", new { @class = "badge bg-danger" })
+        </div>
+    </div>
+
+    <div class="form-group mb-2">
+        @Html.LabelFor(model => model.name, "Name", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col">
+            @Html.EditorFor(model => model.name, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.name, "", new { @class = "badge bg-danger" })
+        </div>
+    </div>
+
+    <div class="form-group mb-2">
+        @Html.LabelFor(model => model.description, "Description", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col">
+            @Html.EditorFor(model => model.description, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.description, "", new { @class = "badge bg-danger" })
+        </div>
+    </div>
+
+    <div class="form-group mb-2">
+        @Html.LabelFor(model => model.code, "Code", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col">
+            @Html.EditorFor(model => model.code, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.code, "", new { @class = "badge bg-danger" })
+        </div>
+    </div>
+
+    <div class="form-group mb-2">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Add" class="btn btn-success mt-2" />
+        </div>
+    </div>
+
+</div>
+}
+
+<script>
+    var reduce = document.querySelector("#reduced_price")
+    var order = document.querySelector("#order_price")
+    reduce.addEventListener("change", generate)
+    order.addEventListener("change", generate)
+    var des = document.querySelector("#description")
+    var vouName = document.querySelector("#name")
+
+    function generate() {
+        des.value = `Thanh toán tối thiểu ${order.value}đ`
+        vouName.value = `Giảm ${reduce.value}đ cho đơn hàng từ ${order.value}đ`
+    }
+
+</script>
+

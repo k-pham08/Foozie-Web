@@ -12,7 +12,7 @@ namespace Foozie_Web.Models
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    
+
     public partial class FOOD
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -20,7 +20,7 @@ namespace Foozie_Web.Models
         {
             this.ORDER_DETAIL = new HashSet<ORDER_DETAIL>();
         }
-    
+
         public System.Guid food_id { get; set; }
         [Required(ErrorMessage = "Không được bỏ trống")]
         public string name { get; set; }
@@ -31,7 +31,7 @@ namespace Foozie_Web.Models
         public int price { get; set; }
         public Nullable<bool> is_delete { get; set; }
         public System.Guid type_id { get; set; }
-    
+
         public virtual FOOD_TYPE FOOD_TYPE { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ORDER_DETAIL> ORDER_DETAIL { get; set; }

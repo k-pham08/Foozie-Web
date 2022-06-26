@@ -30,5 +30,6 @@ namespace Foozie_Web.Models
         public virtual DbSet<FOOD> FOODs { get; set; }
         public virtual DbSet<ORDER> ORDERs { get; set; }
         public virtual DbSet<USER> USERs { get; set; }
+        public virtual DbSet<VOUCHER> VOUCHERs { get; set; }
     }
 }

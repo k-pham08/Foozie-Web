@@ -86,13 +86,19 @@ namespace Foozie_Web.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "order_id,date,status,address,total,user_id")] ORDER oRDER)
+        public ActionResult Edit([Bind(Include = "order_id,date,status,address,total,voucher_id,user_id")] ORDER oRDER)
         {
             if (ModelState.IsValid)
-            {      
+            {
+                if(oRDER.voucher_id != null)
+                {
+                    var voucher = db.VOUCHERs.Find(oRDER.voucher_id);
+                    voucher.used += 1;
+                    db.SaveChanges();
+                }
                 db.Entry(oRDER).State = EntityState.Modified;
                 oRDER.date = DateTime.Now;
-                oRDER.status = "Payment";
+                oRDER.status = "DELIVERING";
                 db.SaveChanges();
                 return RedirectToAction("Index", "Home");
             }

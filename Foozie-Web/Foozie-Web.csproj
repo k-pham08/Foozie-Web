@@ -136,6 +136,7 @@
     <Compile Include="Controllers\ORDERController.cs" />
     <Compile Include="Controllers\ORDER_DETAILController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\VoucherController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -167,6 +168,9 @@
       <DependentUpon>FoodDAL.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\USER.cs">
+      <DependentUpon>FoodDAL.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\VOUCHER.cs">
       <DependentUpon>FoodDAL.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -788,6 +792,11 @@
     <Content Include="Views\Admin\FoodOptions.cshtml" />
     <Content Include="Views\Admin\FoodType.cshtml" />
     <Content Include="Views\Admin\Dashboard.cshtml" />
+    <Content Include="Views\Admin\Voucher.cshtml" />
+    <Content Include="Views\Admin\AddVoucher.cshtml" />
+    <Content Include="Views\Admin\EditVoucher.cshtml" />
+    <Content Include="Views\Home\RenderVoucher.cshtml" />
+    <Content Include="Views\Voucher\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

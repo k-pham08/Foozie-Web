@@ -59,7 +59,7 @@
                                             <img src="~/Images/foods/@food.FOOD_TYPE.code/@food.thumbnail" class="rounded me-3" style="width: 10%" />
                                             <div class="w-100">
                                                 <h5>@food.name</h5>
-                                                <p>Số lượng: <span>@food.price</span></p>
+                                                <p>Giá: <span>@String.Format("{0:n0}", food.price)</span>đ</p>
                                             </div>
                                         </li>
                                     }

@@ -51,7 +51,7 @@
                             <img src="~/Images/foods/@food.FOOD_TYPE.code/@food.thumbnail" class="img-fluid" />
                         </td>
                         <td id="food-name">@food.name</td>
-                        <td>@food.price</td>
+                        <td>@String.Format("{0:n0}", food.price)</td>
                         <td>@food.FOOD_TYPE.name</td>
                         <td>@food.is_delete</td>
                         <td>@food.description</td>
@@ -79,7 +79,7 @@
                             <img src="~/Images/foods/@food.FOOD_TYPE.code/@food.thumbnail" class="img-fluid" />
                         </td>
                         <td id="food-name">@food.name</td>
-                        <td>@food.price</td>
+                        <td>@String.Format("{0:n0}", food.price)</td>
                         <td>@food.FOOD_TYPE.name</td>
                         <td>@food.is_delete</td>
                         <td>@food.description</td>

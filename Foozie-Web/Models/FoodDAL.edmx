@@ -38,6 +38,7 @@
           <Property Name="address" Type="nvarchar" MaxLength="255" />
           <Property Name="user_id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="total" Type="int" />
+          <Property Name="voucher_id" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="ORDER_DETAIL">
           <Key>
@@ -62,6 +63,20 @@
           <Property Name="username" Type="varchar" MaxLength="255" />
           <Property Name="password" Type="varchar" MaxLength="255" />
         </EntityType>
+        <EntityType Name="VOUCHER">
+          <Key>
+            <PropertyRef Name="voucher_id" />
+          </Key>
+          <Property Name="voucher_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="description" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="max_used" Type="int" Nullable="false" />
+          <Property Name="used" Type="int" Nullable="false" />
+          <Property Name="expired" Type="datetime" />
+          <Property Name="reduced_price" Type="int" Nullable="false" />
+          <Property Name="order_price" Type="int" Nullable="false" />
+          <Property Name="code" Type="char" MaxLength="255" Nullable="false" />
+        </EntityType>
         <Association Name="FK__FOOD__type_id__49C3F6B7">
           <End Role="FOOD_TYPE" Type="Self.FOOD_TYPE" Multiplicity="1" />
           <End Role="FOOD" Type="Self.FOOD" Multiplicity="*" />
@@ -83,6 +98,18 @@
             </Principal>
             <Dependent Role="ORDER">
               <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ORDER__voucher_i__160F4887">
+          <End Role="VOUCHER" Type="Self.VOUCHER" Multiplicity="0..1" />
+          <End Role="ORDER" Type="Self.ORDER" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="VOUCHER">
+              <PropertyRef Name="voucher_id" />
+            </Principal>
+            <Dependent Role="ORDER">
+              <PropertyRef Name="voucher_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -116,12 +143,17 @@
           <EntitySet Name="ORDER" EntityType="Self.ORDER" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ORDER_DETAIL" EntityType="Self.ORDER_DETAIL" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="USER" EntityType="Self.USER" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="VOUCHER" EntityType="Self.VOUCHER" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK__FOOD__type_id__49C3F6B7" Association="Self.FK__FOOD__type_id__49C3F6B7">
             <End Role="FOOD_TYPE" EntitySet="FOOD_TYPE" />
             <End Role="FOOD" EntitySet="FOOD" />
           </AssociationSet>
           <AssociationSet Name="FK__ORDER__user_id__72C60C4A" Association="Self.FK__ORDER__user_id__72C60C4A">
             <End Role="USER" EntitySet="USER" />
+            <End Role="ORDER" EntitySet="ORDER" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ORDER__voucher_i__160F4887" Association="Self.FK__ORDER__voucher_i__160F4887">
+            <End Role="VOUCHER" EntitySet="VOUCHER" />
             <End Role="ORDER" EntitySet="ORDER" />
           </AssociationSet>
           <AssociationSet Name="FK__ORDER_DET__food___71D1E811" Association="Self.FK__ORDER_DET__food___71D1E811">
@@ -169,6 +201,11 @@
           <EntitySet Name="USERs" EntityType="FoozieModel.USER" />
           <AssociationSet Name="FK__ORDER__user_id__72C60C4A" Association="FoozieModel.FK__ORDER__user_id__72C60C4A">
             <End Role="USER" EntitySet="USERs" />
+            <End Role="ORDER" EntitySet="ORDERs" />
+          </AssociationSet>
+          <EntitySet Name="VOUCHERs" EntityType="FoozieModel.VOUCHER" />
+          <AssociationSet Name="FK__ORDER__voucher_i__160F4887" Association="FoozieModel.FK__ORDER__voucher_i__160F4887">
+            <End Role="VOUCHER" EntitySet="VOUCHERs" />
             <End Role="ORDER" EntitySet="ORDERs" />
           </AssociationSet>
         </EntityContainer>
@@ -234,6 +271,8 @@
           <Property Name="total" Type="Int32" />
           <NavigationProperty Name="ORDER_DETAIL" Relationship="FoozieModel.FK__ORDER_DET__order__73BA3083" FromRole="ORDER" ToRole="ORDER_DETAIL" />
           <NavigationProperty Name="USER" Relationship="FoozieModel.FK__ORDER__user_id__72C60C4A" FromRole="ORDER" ToRole="USER" />
+          <Property Name="voucher_id" Type="Guid" />
+          <NavigationProperty Name="VOUCHER" Relationship="FoozieModel.FK__ORDER__voucher_i__160F4887" FromRole="ORDER" ToRole="VOUCHER" />
         </EntityType>
         <Association Name="FK__ORDER_DET__order__73BA3083">
           <End Type="FoozieModel.ORDER" Role="ORDER" Multiplicity="1" />
@@ -270,6 +309,33 @@
             </Principal>
             <Dependent Role="ORDER">
               <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="VOUCHER">
+          <Key>
+            <PropertyRef Name="voucher_id" />
+          </Key>
+          <Property Name="voucher_id" Type="Guid" Nullable="false" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="description" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="max_used" Type="Int32" Nullable="false" />
+          <Property Name="used" Type="Int32" Nullable="false" />
+          <Property Name="expired" Type="DateTime" Precision="3" />
+          <Property Name="reduced_price" Type="Int32" Nullable="false" />
+          <Property Name="order_price" Type="Int32" Nullable="false" />
+          <Property Name="code" Type="String" Nullable="false" MaxLength="255" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="ORDERs" Relationship="FoozieModel.FK__ORDER__voucher_i__160F4887" FromRole="VOUCHER" ToRole="ORDER" />
+        </EntityType>
+        <Association Name="FK__ORDER__voucher_i__160F4887">
+          <End Type="FoozieModel.VOUCHER" Role="VOUCHER" Multiplicity="0..1" />
+          <End Type="FoozieModel.ORDER" Role="ORDER" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="VOUCHER">
+              <PropertyRef Name="voucher_id" />
+            </Principal>
+            <Dependent Role="ORDER">
+              <PropertyRef Name="voucher_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -317,6 +383,7 @@
           <EntitySetMapping Name="ORDERs">
             <EntityTypeMapping TypeName="FoozieModel.ORDER">
               <MappingFragment StoreEntitySet="ORDER">
+                <ScalarProperty Name="voucher_id" ColumnName="voucher_id" />
                 <ScalarProperty Name="total" ColumnName="total" />
                 <ScalarProperty Name="user_id" ColumnName="user_id" />
                 <ScalarProperty Name="address" ColumnName="address" />
@@ -337,6 +404,21 @@
                 <ScalarProperty Name="first_name" ColumnName="first_name" />
                 <ScalarProperty Name="type" ColumnName="type" />
                 <ScalarProperty Name="user_id" ColumnName="user_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VOUCHERs">
+            <EntityTypeMapping TypeName="FoozieModel.VOUCHER">
+              <MappingFragment StoreEntitySet="VOUCHER">
+                <ScalarProperty Name="code" ColumnName="code" />
+                <ScalarProperty Name="order_price" ColumnName="order_price" />
+                <ScalarProperty Name="reduced_price" ColumnName="reduced_price" />
+                <ScalarProperty Name="expired" ColumnName="expired" />
+                <ScalarProperty Name="used" ColumnName="used" />
+                <ScalarProperty Name="max_used" ColumnName="max_used" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="voucher_id" ColumnName="voucher_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

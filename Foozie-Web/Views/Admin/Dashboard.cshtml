@@ -30,114 +30,147 @@
         width="900"
         height="380"></canvas>
 
+<div class="ms-5 me-5 mt-3 mb-5">
+    <h3>Top món ăn được đặt nhiều nhất</h3>
+    <div class="top-food"></div>
+</div>
 
 
-    <script>
 
-        var chartDay = document.getElementById('chartLine')
-        var chartMonth = document.getElementById('chartBar')
-        var month = ["January", "February", "March", "April", "May", "June", "July",
-            "August", "September", "October", "November", "December"]
-        var ChartLine = new Chart(chartDay, {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: [{
-                    data: [],
-                    lineTension: 0,
-                    backgroundColor: 'transparent',
-                    borderColor: '#007bff',
-                    pointBackgroundColor: '#007bff'
+<script>
+
+    var topFood = document.querySelector(".top-food")
+    var chartDay = document.getElementById('chartLine')
+    var chartMonth = document.getElementById('chartBar')
+    var month = ["January", "February", "March", "April", "May", "June", "July",
+        "August", "September", "October", "November", "December"]
+    var ChartLine = new Chart(chartDay, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                data: [],
+                lineTension: 0,
+                backgroundColor: 'transparent',
+                borderColor: '#007bff',
+                pointBackgroundColor: '#007bff'
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: false
+                    }
                 }]
             },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: false
-                        }
-                    }]
-                },
-                legend: {
-                    display: false
-                }
+            legend: {
+                display: false
             }
-        })
+        }
+    })
 
-        var ChartBar = new Chart(chartMonth, {
-            type: 'bar',
-            data: {
-                labels: month,
-                datasets: [{
-                    data: [0,0,0,0,0,0,0,0,0,0,0,0],
-                    lineTension: 0,
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgb(54, 162, 235)',
-                    borderWidth: 1
+    var ChartBar = new Chart(chartMonth, {
+        type: 'bar',
+        data: {
+            labels: month,
+            datasets: [{
+                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                lineTension: 0,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgb(54, 162, 235)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    },
                 }]
             },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                },
-                legend: {
-                    display: false
-                }
+            legend: {
+                display: false
             }
+        }
+    })
+
+    async function getDataByDay() {
+        let res = await fetch('https://localhost:44316/Admin/ChartDataByDay')
+        let data = await res.json()
+        return data.slice(0, 14)
+    }
+
+    async function getDataByMonth() {
+        let res = await fetch('https://localhost:44316/Admin/ChartDataByMonth')
+        let data = await res.json()
+        return data
+    }
+
+    async function getTopFood() {
+        let res = await fetch('https://localhost:44316/Admin/TopFood')
+        let data = await res.json()
+        return data
+    }
+
+    function updateData(chart, data) {
+        //chart.data.labels.forEach((dataset) => {
+        //    dataset.data.push(50);
+        //});
+        for (let i = 0; i < data.length; i++) {
+            chart.data.datasets[0].data[i] = data[i].total;
+        }
+        chart.update();
+    }
+
+    function addLabels(chart, labels) {
+        for (let i = 0; i < labels.length; i++) {
+            chart.data.labels[i] = labels[i].date;
+        }
+        chart.update();
+    }
+
+    function setDataByMonth(chart, data) {
+        for (let i = 0; i < data.length; i++) {
+            chart.data.datasets[0].data[data[i].month - 1] = data[i].total;
+        }
+        chart.update();
+    }
+
+    getDataByDay()
+        .then(data => {
+            updateData(ChartLine, data.reverse())
+            addLabels(ChartLine, data)
         })
 
-        async function getDataByDay() {
-            let res = await fetch('https://localhost:44316/Admin/ChartDataByDay')
-            let data = await res.json()
-            return data.slice(0, 7)
-        }
+    getDataByMonth()
+        .then(data => {
+            setDataByMonth(ChartBar, data)
+        })
 
-        async function getDataByMonth() {
-            let res = await fetch('https://localhost:44316/Admin/ChartDataByMonth')
-            let data = await res.json()
-            return data
-        }
-
-        function updateData(chart, data) {
-            //chart.data.labels.forEach((dataset) => {
-            //    dataset.data.push(50);
-            //});
-            for (let i = 0; i < data.length; i++) {
-                chart.data.datasets[0].data[i] = data[i].total;
+    getTopFood()
+        .then(data => {
+            let top = ''
+            let index = 1
+            for (let i = 0; i < 10; i++) {
+                top += `<div class="card p-3 row shadow-lg rounded">
+                    <div class="d-flex justify-content-between">
+                        <h5 class="m-auto">${index}</h5>
+                        <img src="../../Images/foods/${data[i].code}/${data[i].thumbnail}" class="rounded ms-3 me-3" style="width: 15%" />
+                        <div class="w-100">
+                            <h5>${data[i].food}</h5>
+                            <div class="">Số lượng bán ra: <span class="h6">${data[i].count} phần</span></div>
+                        </div>
+                    </div>
+                </div>`
+                index++
             }
-            chart.update();
-        }
+            topFood.innerHTML = top
+        })
 
-        function addLabels(chart, labels) {
-            for (let i = 0; i < labels.length; i++) {
-                chart.data.labels[i] = labels[i].date;
-            }
-            chart.update();
-        }
 
-        function setDataByMonth(chart, data) {
-            for (let i = 0; i < data.length; i++) {
-                chart.data.datasets[0].data[data[i].month - 1] = data[i].total;
-            }
-            chart.update();
-        }
-            
-        getDataByDay()
-            .then(data => {
-                updateData(ChartLine, data.reverse())
-                addLabels(ChartLine, data)
-            })
-
-        getDataByMonth()
-            .then(data => {
-                setDataByMonth(ChartBar, data)
-            })
-
-    </script>
+</script>
 
 
 

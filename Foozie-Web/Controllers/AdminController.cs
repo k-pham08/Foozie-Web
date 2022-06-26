@@ -41,6 +41,26 @@ namespace Foozie_Web.Controllers
             return View(orders);
         }
 
+        public ActionResult TopFood()
+        {
+            List<ORDER_DETAIL> details = db.ORDER_DETAIL.ToList();
+            var date = details.Select(o => new { o.food_id, o.FOOD.name, o.FOOD.thumbnail, o.FOOD.FOOD_TYPE.code, o.quantity }).GroupBy(x => new
+            {
+                x.food_id,
+                x.name,
+                x.thumbnail,
+                x.code,
+            }, (key, group) => new
+            {
+                food_id = key.food_id,
+                food = key.name,
+                thumbnail = key.thumbnail,
+                code = key.code,
+                count = group.Sum(t => t.quantity)
+            }).OrderByDescending(o => o.count).ToList();
+            return Json(date, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult ChartDataByMonth()
         {
             db.Configuration.ProxyCreationEnabled = false;
@@ -74,8 +94,6 @@ namespace Foozie_Web.Controllers
             //orders.OrderByDescending(o => o.date).Select(o => o.total)
             return Json(data, JsonRequestBehavior.AllowGet);
         }
-
-      
 
         public ActionResult Order(string start, string end)
         {
@@ -397,8 +415,18 @@ namespace Foozie_Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                uSER.password = GetMD5(uSER.password);
-                db.Entry(uSER).State = EntityState.Modified;
+                var user = db.USERs.Find(uSER.user_id);
+                if(user.password != GetMD5(uSER.password))
+                {
+                    uSER.password = GetMD5(uSER.password);
+                }
+                user.type = uSER.type;
+                user.first_name = uSER.first_name;
+                user.last_name = uSER.last_name;
+                user.email = uSER.email;
+                user.phone = uSER.phone;
+                user.username = uSER.username;
+                user.password = uSER.password;
                 db.SaveChanges();
                 return RedirectToAction("User");
             }
@@ -420,6 +448,112 @@ namespace Foozie_Web.Controllers
             db.USERs.Remove(user);
             db.SaveChanges();
             return RedirectToAction("User", "Admin");
+        }
+
+        // GET: VOUCHERs
+        public ActionResult Voucher(string search)
+        {
+            if (!String.IsNullOrEmpty(search))
+            {
+                var vouchers = db.VOUCHERs.Where(v => v.name.ToLower().Contains(search.ToLower()) || v.code.ToLower().Contains(search.ToLower())).ToList();
+                return View(vouchers);
+            } else
+            {
+                return View(db.VOUCHERs.ToList());
+            }
+            
+        }
+
+        // GET: VOUCHERs/Details/5
+        public ActionResult Details(Guid? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            VOUCHER vOUCHER = db.VOUCHERs.Find(id);
+            if (vOUCHER == null)
+            {
+                return HttpNotFound();
+            }
+            return View(vOUCHER);
+        }
+
+        // GET: VOUCHERs/Create
+        public ActionResult AddVoucher()
+        {
+            return View();
+        }
+
+        // POST: VOUCHERs/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddVoucher([Bind(Include = "voucher_id,name,description,max_used,used,expired,reduced_price,order_price,code")] VOUCHER vOUCHER)
+        {
+            if (ModelState.IsValid)
+            {
+                vOUCHER.voucher_id = Guid.NewGuid();
+                db.VOUCHERs.Add(vOUCHER);
+                db.SaveChanges();
+                return RedirectToAction("Voucher");
+            }
+
+            return View(vOUCHER);
+        }
+
+        // GET: VOUCHERs/Edit/5
+        public ActionResult EditVoucher(Guid? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            VOUCHER vOUCHER = db.VOUCHERs.Find(id);
+            if (vOUCHER == null)
+            {
+                return HttpNotFound();
+            }
+            return View(vOUCHER);
+        }
+
+        // POST: VOUCHERs/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditVoucher([Bind(Include = "voucher_id,name,description,max_used,used,expired,reduced_price,order_price,code")] VOUCHER vOUCHER)
+        {
+            if (ModelState.IsValid)
+            {
+                
+                if(vOUCHER.expired == null)
+                {
+                    var voucher = db.VOUCHERs.Find(vOUCHER.voucher_id);
+                    voucher.name = vOUCHER.name;
+                    voucher.description = vOUCHER.description;
+                    voucher.max_used = vOUCHER.max_used;
+                    voucher.reduced_price = vOUCHER.reduced_price;
+                    voucher.order_price = vOUCHER.order_price;
+                    voucher.code = vOUCHER.code;
+                } else
+                {
+                    db.Entry(vOUCHER).State = EntityState.Modified;
+                }
+                db.SaveChanges();
+                return RedirectToAction("Voucher");
+            }
+            return View(vOUCHER);
+        }
+
+        [HttpDelete]
+        public ActionResult DeleteVoucher(Guid voucherId)
+        {
+            VOUCHER voucher = db.VOUCHERs.Find(voucherId);
+            db.VOUCHERs.Remove(voucher);
+            db.SaveChanges();
+            return RedirectToAction("voucher", "Admin");
         }
 
         public static string GetMD5(string str)

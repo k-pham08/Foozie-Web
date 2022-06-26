@@ -1,0 +1,14 @@
+﻿@model IEnumerable<Foozie_Web.Models.VOUCHER>
+
+@{ 
+    Layout = null;
+}
+
+<select class="form-select" name="voucher_id" aria-label="Default select example" onchange=change(this)>
+    <option value="" selected>Chọn mã giảm giá</option>
+    @foreach (var voucher in Model)
+    {
+        <option value=@voucher.reduced_price id=@voucher.voucher_id class=@voucher.order_price>@voucher.name</option>
+    }
+</select>
+

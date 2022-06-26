@@ -13,42 +13,58 @@
     @Html.AntiForgeryToken()
     @Html.HiddenFor(model => model.user_id)
     
-    <div class="form-horizontal">
-        <h4>ORDER</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.order_id)
+<div class="form-horizontal">
+    <h4>ORDER</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.order_id)
 
-        <div class="form-group mb-3">
-            @Html.LabelFor(model => model.date, "Date", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.date, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.date, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group mb-3">
-            @Html.LabelFor(model => model.address, "Address", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.address, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.address, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group mb-3">
-            @Html.LabelFor(model => model.total, "Total", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.total, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.total, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-success" />
-            </div>
+    <div class="form-group mb-3">
+        @Html.LabelFor(model => model.date, "Date", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col">
+            @Html.EditorFor(model => model.date, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.date, "", new { @class = "text-danger" })
         </div>
     </div>
+
+    <div class="form-group mb-3">
+        @Html.LabelFor(model => model.address, "Address", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col">
+            @Html.EditorFor(model => model.address, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.address, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group mb-3">
+        @Html.LabelFor(model => model.status, "Status", htmlAttributes: new { @class = "control-label col-md-2" })
+        <select class="form-select m-1" name="status">
+            @if (Model.status == "DONE")
+            {
+                <option value="DELIVERING">DELIEVERING</option>
+                <option value="DONE" selected>DONE</option>
+            }
+            else
+            {
+                <option value="DELIVERING" selected>DELIVERING</option>
+                <option value="DONE">DONE</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group mb-3">
+        @Html.LabelFor(model => model.total, "Total", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col">
+            @Html.EditorFor(model => model.total, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.total, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-success" />
+        </div>
+    </div>
+</div>
 }
 
 

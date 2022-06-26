@@ -23,6 +23,7 @@
             <th scope="col">Date</th>
             <th scope="col">Address</th>
             <th scope="col">Total</th>
+            <th scope="col">Status</th>
             <th scope="col"></th>
         </tr>
     </thead>
@@ -35,6 +36,7 @@
                     <td>@order.date</td>
                     <td>@order.address</td>
                     <td>@order.total</td>
+                    <td>@order.status</td>
                     <td>
                         <div class="d-flex flex-wrap wrap">
                             <button class="btn btn-primary" type="button" style="background: none; border: none" onclick="location.href = '/Admin/EditOrder/@order.order_id';">

@@ -1,0 +1,23 @@
+﻿@model IEnumerable<Foozie_Web.Models.VOUCHER>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="m-5">Kho Voucher</h2>
+
+@foreach (var item in Model)
+{
+    <div class="card ms-5 me-5 mt-3 p-3 row shadow-lg rounded">
+        <div class="d-flex justify-content-between">
+            <img src="https://static.vecteezy.com/system/resources/previews/000/351/305/large_2x/voucher-vector-icon.jpg" class="rounded me-3" style="width: 10%" />
+            <div class="w-100">
+                <h5>@item.name</h5>
+                <p class="">@item.description</p>
+                <p>Ngày hết hạn: <span>@item.expired.GetValueOrDefault().ToString("dd-MM-yyyy")</span></p>
+                <div class="">Còn lại: <span>@{var remain = item.max_used - item.used;} @remain</span></div>
+            </div>
+        </div>
+    </div>
+}

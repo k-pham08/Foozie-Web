@@ -28,7 +28,7 @@ namespace Foozie_Web.Models
         [Required(ErrorMessage = "Không được bỏ trống")]
         public string last_name { get; set; }
         [Required(ErrorMessage = "Không được bỏ trống")]
-        [RegularExpression(@"^[a-zA-Z0-9.]+@[a-zA-Z]+\.+[a-zA-Z]+" , ErrorMessage = "Email có dạng abc@abc.abc")]
+        [RegularExpression(@"^[a-zA-Z0-9.]+@[a-zA-Z]+\.+[a-zA-Z]+", ErrorMessage = "Email có dạng abc@abc.abc")]
         public string email { get; set; }
         [Required(ErrorMessage = "Không được bỏ trống")]
         [RegularExpression(@"^0(\d{9})$", ErrorMessage = "Số điện thoại phải là 10 số và bắt đầu từ ký tự 0")]
@@ -38,7 +38,7 @@ namespace Foozie_Web.Models
         [Required(ErrorMessage = "Không được bỏ trống")]
         [StringLength(255, ErrorMessage = "Mật khẩu tối thiểu 8 ký tự", MinimumLength = 8)]
         public string password { get; set; }
-    
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ORDER> ORDERs { get; set; }
     }

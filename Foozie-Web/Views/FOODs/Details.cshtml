@@ -15,7 +15,7 @@
         <div class="col">
             <h2>@Model.name</h2>
             <p>
-                <span>@Model.price</span>đ
+                <span>@String.Format("{0:n0}", Model.price)</span>đ
             </p>
             @using (Html.BeginForm())
             {

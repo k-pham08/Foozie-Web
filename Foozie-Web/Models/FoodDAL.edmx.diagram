@@ -14,6 +14,8 @@
         <AssociationConnector Association="FoozieModel.FK__ORDER_DET__order__73BA3083" />
         <EntityTypeShape EntityType="FoozieModel.USER" Width="1.5" PointX="1" PointY="4.875" />
         <AssociationConnector Association="FoozieModel.FK__ORDER__user_id__72C60C4A" />
+        <EntityTypeShape EntityType="FoozieModel.VOUCHER" Width="1.5" PointX="5.625" PointY="5" />
+        <AssociationConnector Association="FoozieModel.FK__ORDER__voucher_i__160F4887" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
