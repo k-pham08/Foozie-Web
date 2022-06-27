@@ -53,8 +53,17 @@ namespace Foozie_Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var check = db.USERs.FirstOrDefault(model => model.email == uSER.email);
-                if(check == null)
+                var users = db.USERs.ToList();
+                var check = false;
+                foreach(var user in users)
+                {
+                    if(uSER.email == user.email || uSER.phone == user.phone || uSER.username == user.username)
+                    {
+                        check = true;
+                        break;
+                    }
+                }
+                if(!check)
                 {
                     uSER.user_id = Guid.NewGuid();
                     uSER.type = "USER";
@@ -63,7 +72,7 @@ namespace Foozie_Web.Controllers
                     db.SaveChanges();
                 } else
                 {
-                    ViewBag.error = "Email đã được sử dụng";
+                    ViewBag.error = "Tài khoản đã tồn tại!";
                     return View();
                 }
                 return RedirectToAction("Login");
